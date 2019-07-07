@@ -6,7 +6,7 @@ from xlib import retstat
 
 import apidemo
 
-import logger
+from conf import logger_conf
 import inspect
 
 apicube = {}
@@ -21,7 +21,7 @@ def addapi(name, func, is_parse_post, is_encode_response):
         is_encode_response: 是否 encode 为 utf8
     """
     apicube[name] = protocol_json.Protocol(func, retstat.ERR_SERVER_EXCEPTION, retstat.ERR_BAD_PARAMS,
-                                           is_parse_post, is_encode_response, logger.errlog)
+                                           is_parse_post, is_encode_response, logger_conf.errlog)
 
 
 def add_apis(module, api_adder, adder_args):
@@ -46,8 +46,8 @@ add_apis(apidemo, addapi, [True, True])
 # 用于处理 application 中 environ
 wsgigw = httpgateway.WSGIGateway(
     httpgateway.get_func_name,
-    logger.errlog,
-    logger.acclog,
+    logger_conf.errlog,
+    logger_conf.acclog,
     apicube)
 
 

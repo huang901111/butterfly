@@ -4,7 +4,7 @@ import signal
 from xlib.cherrypy_wsgiserver import CherryPyWSGIServer
 
 import wsgiapp
-import config
+from conf import config
 
 if __name__ == '__main__':
     server = CherryPyWSGIServer(
