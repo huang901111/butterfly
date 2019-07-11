@@ -8,6 +8,7 @@
     This module provides parsing WSGI Env and returning HTTP results
 """
 
+import os
 import traceback
 import urlparse
 import time
@@ -19,6 +20,9 @@ import uuid64
 
 class Request(object):
     """Request Class
+
+    Used to package a request
+
     Attributes:
         reqid: (String)
         wsgienv: (Dict)
@@ -81,17 +85,27 @@ class WSGIGateway(object):
         _acclog: (Instance) Log class
         _errlog: (Instance) Log class
         _uuid64: (Instance)
+        _static_path: (String) static path
+        _static_prefix: (String) static prefix
     """
 
-    def __init__(self, funcname_getter, errlog, acclog, protocols):
+    def __init__(self,
+            funcname_getter,
+            errlog,
+            acclog,
+            protocols,
+            static_path="",
+            static_prefix=None):
         self._protocols = protocols
         self._apiname_getter = funcname_getter
         self._acclog = acclog
         self._errlog = errlog
         self._uuid64 = uuid64.UUID64()
+        self._static_path = static_path
+        self._static_prefix = static_prefix
 
     def process(self, wsgienv):
-        """process wsgienv
+        """Process wsgienv
         Args:
             wsgienv:(Dict) wsgi env
         Returns:
@@ -104,6 +118,11 @@ class WSGIGateway(object):
             ip = wsgienv.get("HTTP_SRC_ADDR") or wsgienv.get("REMOTE_ADDR")
             assert ip
             req.ip = ip
+
+            # 如果匹配到静态文件前缀，就会返回静态文件
+            file_path = self._try_to_handler_static(wsgienv)
+            if file_path:
+                return self._mk_static_ret(req, file_path)
 
             funcname = self._apiname_getter(wsgienv)
             req.funcname = funcname
@@ -174,6 +193,54 @@ class WSGIGateway(object):
 
         return httpstatus, headers, content
 
+    def _mk_static_ret(self, req, file_path):
+        """Static file return
+
+        Args:
+            req:http req
+            file_path:static file path
+        Returns:
+            self._mk_ret or self._mk_err_ret
+        """
+        if os.path.exists(file_path):
+            httpstatus = "200 OK"
+            headers = []
+            try:
+                with open(file_path, "r") as f:
+                    data = f.read()
+                    headers.append(("Content-Length", str(len(data))))
+                    data = [data]
+                    return self._mk_ret(req, httpstatus, headers, data)
+            except BaseException:
+                return self._mk_err_ret(
+                    req, 500, "Read File Error", "Read File Error %s" % traceback.format_exc())
+        else:
+            return self._mk_err_ret(
+                req, 404, "File Not Found", "File Not Found")
+
+    def _try_to_handler_static(self, wsgienv):
+        """
+        If there is a static file flag, the static file path is returned
+
+        Args：
+            wsgienv:(Dict)
+        Returns:
+            static file path
+        """
+        if not self._static_prefix:
+            return None
+
+        path = wsgienv.get("PATH_INFO", "")
+        if path.startswith("/" + self._static_prefix):
+            if self._static_path[-1] == "/":
+                file_path = self._static_path + "/".join(path.split("/")[2:])
+            else:
+                file_path = self._static_path + "/" + \
+                    "/".join(path.split("/")[2:])
+
+            return file_path
+
+        return None
 
 def httpget2dict(qs):
     if not qs:
