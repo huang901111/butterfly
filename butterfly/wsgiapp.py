@@ -7,6 +7,7 @@ from xlib import retstat
 import apidemo
 
 from conf import logger_conf
+from conf import config
 import inspect
 
 apicube = {}
@@ -48,7 +49,10 @@ wsgigw = httpgateway.WSGIGateway(
     httpgateway.get_func_name,
     logger_conf.errlog,
     logger_conf.acclog,
-    apicube)
+    apicube,
+    config.STATIC_PATH,
+    config.STATIC_PREFIX
+    )
 
 
 def application(environ, start_response):
@@ -57,9 +61,7 @@ def application(environ, start_response):
         start_response(status, headders)
         return content
     except BaseException:
-        start_response(
-            "500 Internal Server Error", [
-                ("GateWayError", "UnknownException")])
+        start_response("500 Internal Server Error", [("GateWayError", "UnknownException")])
         return ()
 
 

@@ -5,7 +5,7 @@ cd ${CUR_DIR}
 DISP_NAME="butterfly"
 
 EXEC="python2.7"
-MAIN_FILE="./main.py"
+MAIN_FILE="${CUR_DIR}/main.py"
 STDOUT="${CUR_DIR}/__stdout"
 
 PROC_SIG="954216e9"
