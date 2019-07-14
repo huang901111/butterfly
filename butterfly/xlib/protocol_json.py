@@ -5,6 +5,7 @@
 
 # File Name: protocol_json.py
 # Description:
+    Used to modify handler
 """
 
 import traceback
@@ -22,7 +23,7 @@ class Protocol(object):
     Args:
         _func:(String) func name
         _errlog: err log
-        _code_err: err code
+        _code_err: (String) Value with the name stat in the return value. default: ERR_SERVER_EXCEPTION
         _code_badparam:
         _is_parse_post:_is_encode_response:
     """
@@ -37,6 +38,15 @@ class Protocol(object):
         self._is_encode_response = is_encode_response
 
     def _mk_ret(self, req, stat, data, headers):
+        """
+        Args:
+            req: Request instance
+            stat: (String) Value with the name stat in the return value. default: ERR_SERVER_EXCEPTION
+            data: (Dict) Http body data
+            headers: (List) http headers
+        Returns:
+            status, headders, content
+        """
         if data is None:
             data = {}
         if headers is None:
@@ -54,6 +64,13 @@ class Protocol(object):
         return "200 OK", headers, (jsoncontent,)
 
     def _mk_json_content(self, stat, data):
+        """make json content
+        Args:
+            stat:(string) Value with the name stat in the return value. default: ERR_SERVER_EXCEPTION
+            data:(Dict) return content
+        Returns:
+            ret:(json)
+        """
         data["stat"] = stat
         ret = json.dumps(data)
         if isinstance(ret, unicode):
@@ -61,6 +78,15 @@ class Protocol(object):
         return ret
 
     def _mk_err_ret(self, req, is_bad_param, err_msg, log_msg):
+        """make err return
+        Args:
+            req: Request instance
+            is_bad_param:(Bool)
+            err_msg:(String) err msg
+            log_msg:(String) err log msg
+        Returns:
+            status, headders, content
+        """
         req.error_str = err_msg
         if log_msg:
             req.log(self._errlog, log_msg)
