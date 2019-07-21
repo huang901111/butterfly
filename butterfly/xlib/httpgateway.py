@@ -90,12 +90,12 @@ class WSGIGateway(object):
     """
 
     def __init__(self,
-            funcname_getter,
-            errlog,
-            acclog,
-            protocols,
-            static_path="",
-            static_prefix=None):
+                 funcname_getter,
+                 errlog,
+                 acclog,
+                 protocols,
+                 static_path="",
+                 static_prefix=None):
         self._protocols = protocols
         self._apiname_getter = funcname_getter
         self._acclog = acclog
@@ -216,7 +216,7 @@ class WSGIGateway(object):
                     req, 500, "Read File Error", "Read File Error %s" % traceback.format_exc())
         else:
             return self._mk_err_ret(
-                req, 404, "File Not Found", "File Not Found")
+                req, 404, "File Not Found", "File Not Found,path:{file_path}".format(file_path=file_path))
 
     def _try_to_handler_static(self, wsgienv):
         """
@@ -241,6 +241,7 @@ class WSGIGateway(object):
             return file_path
 
         return None
+
 
 def httpget2dict(qs):
     if not qs:

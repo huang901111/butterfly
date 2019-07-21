@@ -12,4 +12,4 @@ PATH_CRIT_LOG = "logs/crit.log"
 
 # static
 STATIC_PATH = "static"
-STATIC_PREFIX="static_files"
+STATIC_PREFIX="static"

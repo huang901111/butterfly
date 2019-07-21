@@ -8,6 +8,7 @@
 # Description:
 
 """
+from conf import config
 def test_demo_test1(init_data):
     """
     test func demo_test1
@@ -62,3 +63,24 @@ def test_400(init_data):
         if headder[0] == 'x-reason':
             assert headder[1] == "API Not Found"
     assert content == ""
+
+
+def test_static(init_data):
+    """
+    If there is a static file flag, the static file path is returned
+    """
+    # File Not Found
+    static_prefix = config.STATIC_PREFIX
+    environ1={
+            "PATH_INFO":"/{prefix}/static_file".format(prefix = static_prefix),
+            "REMOTE_ADDR": "192.10.10.10"
+            }
+    status, headders, content = init_data.process(environ1)
+    assert status == "404 Not Found"
+    ## headders:[('x-reqid', '83CAEEF6E4C397B7'), ('x-cost', '0.000029'), ('x-reason', 'File Not Found')]
+    for headder in headders:
+        if headder[0] == 'x-reason':
+            assert headder[1] == "File Not Found"
+    assert content == ""
+
+    # File exist
