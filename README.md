@@ -1,4 +1,7 @@
 # butterfly
+
+<div align=center><img src="https://github.com/meetbill/butterfly/blob/master/images/butterfly.png" width="350"/></div>
+
 蝴蝶（轻量化 Web 框架）
 ```
     __          __  __            ______
