@@ -16,6 +16,7 @@
 * [环境](#环境)
 * [特性](#特性)
 * [使用手册](#使用手册)
+* [版本信息](#版本信息)
 * [参加步骤](#参加步骤)
 
 <!-- vim-markdown-toc -->
@@ -27,12 +28,17 @@ env:Python 2.7
 ## 特性
 
 > * 自动加载路由
-> * 轻量
+> * 轻量(就像蝴蝶这个名字一样，小而美)
 > * 自定义 http header
+> * Handler 的参数列表与 http 请求参数保持一致，便于接口开发
 
 ## 使用手册
 
 [使用手册](https://github.com/meetbill/butterfly/wiki)
+
+## 版本信息
+
+本项目的各版本信息和变更历史可以在[这里][changelog]查看。
 
 ## 参加步骤
 
@@ -58,3 +64,5 @@ $ git checkout master
 $ git rebase upstream/master
 $ git push -f origin master
 ```
+
+[changelog]:(./CHANGELOG.md)

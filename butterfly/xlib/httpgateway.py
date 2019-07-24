@@ -17,6 +17,7 @@ from inspect import ismethod
 
 import uuid64
 
+__version__ = "1.0.2"
 
 class Request(object):
     """Request Class
@@ -140,6 +141,7 @@ class WSGIGateway(object):
             return self._mk_err_ret(
                 req, 500, "API Processing Error", "API Processing Error %s" % traceback.format_exc())
 
+        headers.append(("butterfly",__version__))
         return self._mk_ret(req, httpstatus, headers, content)
 
     def _mk_err_ret(self, req, err_code, err_msg, log_msg):
