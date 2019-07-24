@@ -65,4 +65,4 @@ $ git rebase upstream/master
 $ git push -f origin master
 ```
 
-[changelog]:(./CHANGELOG.md)
+[changelog]: CHANGELOG.md
