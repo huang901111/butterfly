@@ -32,3 +32,4 @@ def ping(req):
 def hello(req, str_info):
     isinstance(req, Request)
     return retstat.OK, {"str_info": str_info}, [(__info__, __version__)]
+

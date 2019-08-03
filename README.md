@@ -2,7 +2,8 @@
 
 <div align=center><img src="https://github.com/meetbill/butterfly/blob/master/images/butterfly.png" width="350"/></div>
 
-蝴蝶（轻量化 Web 框架）
+蝴蝶（轻量化 Web 框架）就像蝴蝶这个名字一样，此框架小而美
+
 ```
     __          __  __            ______
    / /_  __  __/ /_/ /____  _____/ __/ /_  __
@@ -27,10 +28,10 @@ env:Python 2.7
 
 ## 特性
 
-> * 自动加载路由
-> * 轻量(就像蝴蝶这个名字一样，小而美)
-> * 自定义 http header
-> * Handler 的参数列表与 http 请求参数保持一致，便于接口开发
+> * 自动加载路由(目前不支持动态路由)
+> * 自定义 HTTP header
+> * Handler 的参数列表与 HTTP 请求参数保持一致，便于接口开发
+> * 自动对 HTTP 请求参数进行参数检查
 
 ## 使用手册
 

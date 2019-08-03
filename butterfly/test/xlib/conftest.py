@@ -31,7 +31,7 @@ def init_data():
     :return:
     """
     apicube = {}
-    apicube["demo_test1"] = protocol_json.Protocol(demo_test1, retstat.ERR_SERVER_EXCEPTION, retstat.ERR_BAD_PARAMS,True, True, errlog)
+    apicube["/demo_test1"] = protocol_json.Protocol(demo_test1, retstat.ERR_SERVER_EXCEPTION, retstat.ERR_BAD_PARAMS,True, True, errlog)
     wsgigw = httpgateway.WSGIGateway(
         httpgateway.get_func_name,
         errlog,

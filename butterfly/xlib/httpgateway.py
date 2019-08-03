@@ -17,7 +17,7 @@ from inspect import ismethod
 
 import uuid64
 
-__version__ = "1.0.2"
+__version__ = "1.0.3"
 
 class Request(object):
     """Request Class
@@ -354,9 +354,7 @@ def get_func_name(wsgienv):
     """
     path = wsgienv.get("PATH_INFO", "")
     if path.endswith("/"):
-        i = path.rfind("/", 0, -1)
-        func_name = path[i + 1: -1].encode("ascii")
+        func_name = path[:-1].encode("ascii")
     else:
-        i = path.rfind("/")
-        func_name = path[i + 1:].encode("ascii")
+        func_name = path.encode("ascii")
     return func_name

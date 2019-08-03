@@ -44,7 +44,6 @@ def test_demo_test1(init_data):
     status, headders, content = init_data.process(environ)
     assert status == "200 OK"
     ## headders:[('Content-Length', '38'), ('x-reqid', '32E6F4F44155B85F'), ('x-cost', '0.000206')]
-    assert len(headders) == 3
     assert content == ('{"stat": "OK", "str_info": "meetbill"}',)
 
 def test_400(init_data):
