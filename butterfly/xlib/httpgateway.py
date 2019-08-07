@@ -131,17 +131,14 @@ class WSGIGateway(object):
             if not protocol:
                 return self._mk_err_ret(req, 400, "API Not Found", "")
         except BaseException:
-            return self._mk_err_ret(
-                req, 400, "Get API Exception", "Get API Exception %s" % traceback.format_exc())
+            return self._mk_err_ret(req, 400, "Get API Exception", "Get API Exception %s" % traceback.format_exc())
 
         try:
             httpstatus, headers, content = protocol(req)
             # httpstatus, headers, content = "200 OK", [], ""
         except BaseException:
-            return self._mk_err_ret(
-                req, 500, "API Processing Error", "API Processing Error %s" % traceback.format_exc())
+            return self._mk_err_ret(req, 500, "API Processing Error", "API Processing Error %s" % traceback.format_exc())
 
-        headers.append(("butterfly",__version__))
         return self._mk_ret(req, httpstatus, headers, content)
 
     def _mk_err_ret(self, req, err_code, err_msg, log_msg):
@@ -174,6 +171,7 @@ class WSGIGateway(object):
         cost = time.time() - req.init_tm
         cost_str = "%.6f" % cost
         try:
+            headers.append(("butterfly",__version__))
             headers.append(("x-reqid", req.reqid))
             # cost time
             headers.append(("x-cost", cost_str))
@@ -187,9 +185,7 @@ class WSGIGateway(object):
                              (req.ip, req.reqid, req.funcname, cost_str, req.log_ret_code, stat_str, log_params_str, req.error_str, ",".join(req.log_res)))
         except BaseException:
             try:
-                self._errlog.log(
-                    "%s %s %s Make Acclog Error %s" %
-                    (req.reqid, req.ip, req.funcname, traceback.format_exc()))
+                self._errlog.log("%s %s %s Make Acclog Error %s" % (req.reqid, req.ip, req.funcname, traceback.format_exc()))
             except BaseException:
                 traceback.print_exc()
 
@@ -214,11 +210,9 @@ class WSGIGateway(object):
                     data = [data]
                     return self._mk_ret(req, httpstatus, headers, data)
             except BaseException:
-                return self._mk_err_ret(
-                    req, 500, "Read File Error", "Read File Error %s" % traceback.format_exc())
+                return self._mk_err_ret(req, 500, "Read File Error", "Read File Error %s" % traceback.format_exc())
         else:
-            return self._mk_err_ret(
-                req, 404, "File Not Found", "File Not Found,path:{file_path}".format(file_path=file_path))
+            return self._mk_err_ret(req, 404, "File Not Found", "File Not Found,path:{file_path}".format(file_path=file_path))
 
     def _try_to_handler_static(self, wsgienv):
         """
