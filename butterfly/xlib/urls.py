@@ -114,12 +114,11 @@ class Route(object):
         # 将 "handlers" 目录下的 package 自动加载，也就是 __init__.py
         results = import_submodules(package_dir)
         for package_name in results:
-            # 如果 package_name 是以 {package_dir}.api 开头，则说明为接口函数
-            if package_name.startswith(
-                    "{package_dir}.api".format(package_dir=package_dir)):
+            # 如果 package_name 是以 {package_dir}.x 开头，则说明为简易接口函数
+            if package_name.startswith("{package_dir}.x".format(package_dir=package_dir)):
                 adder_args = [True, True]
             else:
-                adder_args = [False, False]
+                adder_args = [True, False]
             self.add_apis(
                 results[package_name],
                 adder_args,

@@ -5,7 +5,6 @@ import struct
 from xlib import util
 from xlib.httpgateway import Request
 from xlib import retstat
-import json
 
 from conf import logger_conf
 
@@ -29,15 +28,15 @@ def ping(req):
             > content: (str)非必须(当返回值为 2 个的时候，第 2 个返回值为 Content)
             > headers: 非必须(当返回值为 3 个的时候，第 3 个返回值为 headers)
 
-        如下例子为 HTTP 方法返回
+        如下例子为简单接口函数
     """
     isinstance(req, Request)
     req.log_params["x"] = 1
     clen = struct.unpack("i", os.urandom(4))[0] % 64 + 64
     randstr = util.Base64_16.bin_to_b64(os.urandom(clen))
-    return retstat.HTTP_OK, json.dumps({"stat":"OK","randstr": randstr}), [(__info__, __version__),("Content-Type","application/json")]
+    return retstat.OK, {"randstr": randstr}, [(__info__, __version__)]
 
 
 def hello(req, str_info):
     isinstance(req, Request)
-    return retstat.HTTP_OK, json.dumps({"stat":"OK","str_info": str_info}), [(__info__, __version__),("Content-Type","application/json")]
+    return retstat.OK, {"str_info": str_info}, [(__info__, __version__)]

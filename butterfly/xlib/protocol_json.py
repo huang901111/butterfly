@@ -134,6 +134,7 @@ class Protocol(object):
                     return self._mk_err_ret(req, False, "Invalid ret format", "Invalid ret format %s" % type(ret))
 
                 req.log_ret_code = code
+                # 如果执行到这里，说明函数处理逻辑正常，此处会返回 200 状态码
                 return self._mk_ret(req, code, data, headers)
             else:
                 status = 500
