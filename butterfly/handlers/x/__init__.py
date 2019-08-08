@@ -25,7 +25,9 @@ def ping(req):
         当此函数作为 HTTP 方法返回时:
             httpstatus, [content], [headers]
             > httpstatus: (int)必须有
-            > content: (str)非必须(当返回值为 2 个的时候，第 2 个返回值为 Content)
+            > content: (str/dict)非必须(当返回值为 2 个的时候，第 2 个返回值为 Content)
+                       当 content 为 dict 时，会自动转为 json ，并且设置 header("Content-Type","application/json")
+                       当 content 为其他时，会自动设置为 ("Content-Type","text/html")
             > headers: 非必须(当返回值为 3 个的时候，第 3 个返回值为 headers)
 
         如下例子为简单接口函数

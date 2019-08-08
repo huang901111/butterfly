@@ -52,7 +52,7 @@ class Protocol(object):
         if headers is None:
             headers = []
         try:
-            jsoncontent = self._mk_json_content(stat, data)
+            jsoncontent = self._mk_json_content(data, stat)
         except BaseException:
             req.log(self._errlog, "Json dump failed\n%s" % traceback.format_exc())
             req.error_str = "Dump json exception"
@@ -60,15 +60,16 @@ class Protocol(object):
         headers.append(("Content-Length", str(len(jsoncontent))))
         return "200 OK", headers, (jsoncontent,)
 
-    def _mk_json_content(self, stat, data):
+    def _mk_json_content(self, data, stat=None):
         """make json content
         Args:
-            stat:(string) Value with the name stat in the return value. default: ERR_SERVER_EXCEPTION
             data:(Dict) return content
+            stat:(string) Value with the name stat in the return value. default: ERR_SERVER_EXCEPTION
         Returns:
             ret:(json)
         """
-        data["stat"] = stat
+        if stat is not None:
+            data["stat"] = stat
         ret = json.dumps(data)
         if isinstance(ret, unicode):
             ret = ret.encode("utf8")
@@ -152,6 +153,13 @@ class Protocol(object):
                     return self._mk_err_ret(req, False, "Invalid ret format", "Invalid ret format, data %s" % type(data))
                 elif not isinstance(status, int):
                     return self._mk_err_ret(req, False, "Invalid ret format", "Invalid ret format, status %s" % type(status))
+
+                if isinstance(data,dict):
+                    data = self._mk_json_content(data)
+                    headers.append(("Content-Length", str(len(data))))
+                    headers.append(("Content-Type","application/json"))
+                else:
+                    headers.append(("Content-Type","text/html"))
 
                 req.log_ret_code = status
                 status_line = "%s %s" % (status, httplib.responses.get(status, ""))
