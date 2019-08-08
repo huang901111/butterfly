@@ -54,10 +54,7 @@ class Protocol(object):
         try:
             jsoncontent = self._mk_json_content(stat, data)
         except BaseException:
-            req.log(
-                self._errlog,
-                "Json dump failed\n%s" %
-                traceback.format_exc())
+            req.log(self._errlog, "Json dump failed\n%s" % traceback.format_exc())
             req.error_str = "Dump json exception"
             return "200 OK", [], ""
         headers.append(("Content-Length", str(len(jsoncontent))))
@@ -98,15 +95,14 @@ class Protocol(object):
         else:
             err_code = 400 if is_bad_param else 500
             req.log_ret_code = err_code
-            status_line = "%s %s" % (
-                err_code, httplib.responses.get(err_code, ""))
+            status_line = "%s %s" % (err_code, httplib.responses.get(err_code, ""))
             return status_line, [], ""
 
     def __call__(self, req):
+        # 请求参数获取和检查
         try:
             params = httpget2dict(req.wsgienv.get("QUERY_STRING"))
-            if self._is_parse_post and req.wsgienv.get(
-                    "REQUEST_METHOD") == "POST":
+            if self._is_parse_post and req.wsgienv.get("REQUEST_METHOD") == "POST":
                 post_data = read_wsgi_post(req.wsgienv)
                 if post_data:
                     post_params = json.loads(post_data)
@@ -117,12 +113,11 @@ class Protocol(object):
             params["req"] = req
 
             if not check_param(self._func, params):
-                return self._mk_err_ret(
-                    req, True, "Param check failed", "%s Param check failed" % req.ip)
+                return self._mk_err_ret(req, True, "Param check failed", "%s Param check failed" % req.ip)
         except BaseException:
-            return self._mk_err_ret(req, True, "Param check exception", "%s Param check failed\n%s" % (
-                req.ip, traceback.format_exc()))
+            return self._mk_err_ret(req, True, "Param check exception", "%s Param check failed\n%s" % (req.ip, traceback.format_exc()))
 
+        # 返回值校验
         try:
             ret = self._func(**params)
             headers = []
@@ -136,8 +131,7 @@ class Protocol(object):
                 elif len(ret) == 3:
                     code, data, headers = ret
                 else:
-                    return self._mk_err_ret(
-                        req, False, "Invalid ret format", "Invalid ret format %s" % type(ret))
+                    return self._mk_err_ret(req, False, "Invalid ret format", "Invalid ret format %s" % type(ret))
 
                 req.log_ret_code = code
                 return self._mk_ret(req, code, data, headers)
@@ -151,20 +145,15 @@ class Protocol(object):
                 elif len(ret) == 3:
                     status, data, headers = ret
                 else:
-                    return self._mk_err_ret(
-                        req, False, "Invalid ret format", "Invalid ret format %s" % type(ret))
+                    return self._mk_err_ret(req, False, "Invalid ret format", "Invalid ret format %s" % type(ret))
 
                 if not isinstance(data, Iterable):
-                    return self._mk_err_ret(
-                        req, False, "Invalid ret format", "Invalid ret format, data %s" % type(data))
+                    return self._mk_err_ret(req, False, "Invalid ret format", "Invalid ret format, data %s" % type(data))
                 elif not isinstance(status, int):
-                    return self._mk_err_ret(
-                        req, False, "Invalid ret format", "Invalid ret format, status %s" % type(status))
+                    return self._mk_err_ret(req, False, "Invalid ret format", "Invalid ret format, status %s" % type(status))
 
                 req.log_ret_code = status
-                status_line = "%s %s" % (
-                    status, httplib.responses.get(status, ""))
+                status_line = "%s %s" % (status, httplib.responses.get(status, ""))
                 return status_line, headers, data
         except BaseException:
-            return self._mk_err_ret(
-                req, False, "API Processing Exception", "Server exception\n%s" % traceback.format_exc())
+            return self._mk_err_ret(req, False, "API Processing Exception", "Server exception\n%s" % traceback.format_exc())
