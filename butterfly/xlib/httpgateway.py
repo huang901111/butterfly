@@ -17,7 +17,7 @@ from inspect import ismethod
 
 import uuid64
 
-__version__ = "1.0.3"
+__version__ = "1.0.4"
 
 class Request(object):
     """Request Class

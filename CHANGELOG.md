@@ -4,6 +4,10 @@ Changelog
 
 本项目版本遵守 [Semantic Versioning] 和 [PEP-440]。
 
+## [1.0.4] - 2019-08-09 
+### Added
+- 支持 auth(pyjwt)
+
 ## [1.0.3] - 2019-08-03
 ### Changed
 - 支持多级路由，自动加载路由从自动从 moudle 中加载，修改为自动从指定 package 下自动加载
