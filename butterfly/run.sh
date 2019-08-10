@@ -11,10 +11,10 @@ STDOUT="${CUR_DIR}/__stdout"
 PROC_SIG="954216e9"
 
 # Consts
-RED='\e[1;91m'
-GREN='\e[1;92m'
-WITE='\e[1;97m'
-NC='\e[0m'
+RED='\033[1;91m'
+GREN='\033[1;92m'
+WITE='\033[1;97m'
+NC='\033[0m'
 
 # Global vailables
 PROC_COUNT="0"
