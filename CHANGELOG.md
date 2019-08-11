@@ -7,6 +7,7 @@ Changelog
 ## [1.0.4] - 2019-08-09 
 ### Added
 - 支持 auth(pyjwt)
+- 添加 MySQL pool
 
 ## [1.0.3] - 2019-08-03
 ### Changed
