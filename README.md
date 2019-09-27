@@ -28,7 +28,19 @@ env:Python 2.7
 
 ## 2 特性
 
-> * 自动加载路由(目前不支持动态路由)
+```
+# 不带参数
+http://IP:PORT/{handlers 下的 package,此处支持多级}/{func_name}
+
+# 带参数
+http://IP:PORT/{handlers 下的 package,此处支持多级}/{func_name}?args1=value1
+
+如:
+curl -v "http://127.0.0.1:8585/x/ping"                      ===> handlers/x::ping()
+curl -v "http://127.0.0.1:8585/x/hello?str_info=meetbill"   ===> handlers/x::hello(str_info=meetbill)
+```
+
+> * 根据 handlers package 下 package 目录结构自动加载路由(目前不支持动态路由)
 > * 自定义 HTTP header
 > * Handler 的参数列表与 HTTP 请求参数保持一致，便于接口开发
 > * 自动对 HTTP 请求参数进行参数检查

@@ -2,6 +2,7 @@
 
 import time
 import traceback
+import inspect
 import os
 import logging
 import logging.handlers
@@ -59,8 +60,8 @@ class LoggerBase:
         if self._is_day_rolling:
             if not self._tm or self._fd is None or now.tm_mday != self._tm.tm_mday:
                 self._tm = now
-                self._curpath = "%s%s" % (
-                    self._path, time.strftime("%Y-%m-%d", self._tm))
+                self._curpath = "%s%s" % (self._path,
+                                          time.strftime("%Y-%m-%d", self._tm))
                 self._reopen_file(os.O_CREAT | os.O_APPEND | os.O_WRONLY)
         else:
             if self._fd is None:
@@ -74,14 +75,27 @@ class LoggerBase:
                 self._writed_lines = 0
 
     def log(self, logtype, info=""):
+        func = inspect.currentframe().f_back
+        filename = os.path.basename(func.f_code.co_filename)
+        lineno = func.f_lineno
+        cur_info = "{filename}:{lineno}".format(
+            filename=filename, lineno=lineno)
+
         now = time.localtime()
         self._checkfile(now)
         if info:
-            logline = "%s\t%s\t%s\t%s" % (time.strftime(
-                "%Y-%m-%d %H:%M:%S", now), self._pid, logtype, info)
+            logline = "%s\t%s\t%s\t%s\t%s" % (
+                time.strftime("%Y-%m-%d %H:%M:%S", now),
+                self._pid,
+                cur_info,
+                logtype,
+                info)
         else:
-            logline = "%s\t%s\t%s" % (time.strftime(
-                "%Y-%m-%d %H:%M:%S", now), self._pid, logtype)
+            logline = "%s\t%s\t%s\t%s" % (
+                time.strftime("%Y-%m-%d %H:%M:%S", now),
+                self._pid,
+                cur_info,
+                logtype)
         if DEBUG_VERBOSE:
             print logline
 
