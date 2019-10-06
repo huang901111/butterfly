@@ -17,7 +17,7 @@ from inspect import ismethod
 
 import uuid64
 
-__version__ = "1.0.4"
+__version__ = "1.0.5"
 
 class Request(object):
     """Request Class
@@ -145,9 +145,9 @@ class WSGIGateway(object):
         """error return
         Args:
             req: req
-            err_code:err_code
-            err_msg: err msg info
-            log_msg: log msg info
+            err_code: (Int) err_code
+            err_msg : (String) err msg info
+            log_msg : (String) log msg info
         Returns:
             _mk_ret
         """
@@ -161,10 +161,10 @@ class WSGIGateway(object):
     def _mk_ret(self, req, httpstatus, headers, content):
         """normal return
         Args:
-            req:http req
-            httpstatus: (int) httpstatus
-            headers: http headers
-            context:http body
+            req       : http req
+            httpstatus: (String) httpstatus eg.:"200 OK","400 Get API Exception"
+            headers   : (List) http headers
+            context   : (String) http body
         Returns:
             httpstatus, headers, content
         """
@@ -203,6 +203,8 @@ class WSGIGateway(object):
         if os.path.exists(file_path):
             httpstatus = "200 OK"
             headers = []
+            req.log_ret_code = 200
+            req.funcname = file_path
             try:
                 with open(file_path, "r") as f:
                     data = f.read()

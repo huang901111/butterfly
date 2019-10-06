@@ -4,7 +4,13 @@ Changelog
 
 本项目版本遵守 [Semantic Versioning] 和 [PEP-440]。
 
-## [1.0.4] - 2019-08-09 
+## [1.0.5] - 2019-10-06
+### Fixed
+- 修正请求静态文件时，日志中不打印静态文件信息以及状态码问题
+### Changed
+- 日志中添加打印 filename 以及 lineno 列，方便排查问题
+
+## [1.0.4] - 2019-08-09
 ### Added
 - 支持 auth(pyjwt)
 - 添加 MySQL pool

@@ -21,11 +21,11 @@ from httpgateway import read_wsgi_post
 class Protocol(object):
     """Returns http Request
     Args:
-        _func:(String) func name
-        _errlog: err log
-        _code_err: (String) Value with the name stat in the return value. default: ERR_SERVER_EXCEPTION
-        _code_badparam:
-        _is_parse_post:_is_encode_response:
+        _func          : (String) func name
+        _errlog        : (Object) err log logger
+        _code_err      : (String) retstat.ERR_SERVER_EXCEPTION
+        _code_badparam : (String) retstat.ERR_BAD_PARAMS
+        _is_parse_post : _is_encode_response:
     """
 
     def __init__(self, func, code_err, code_badparam,
