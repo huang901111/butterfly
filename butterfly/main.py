@@ -1,10 +1,19 @@
 import resource
 import signal
+import os
+import sys
 
-from xlib.cherrypy_wsgiserver import CherryPyWSGIServer
+# ********************************************************
+# * Third lib                                            *
+# ********************************************************
+if os.path.exists('third'):
+    cur_path = os.path.split(os.path.realpath(__file__))[0]
+    sys.path.insert(0, os.path.join(cur_path, 'third'))
 
 import wsgiapp
+from xlib.cherrypy_wsgiserver import CherryPyWSGIServer
 from conf import config
+
 
 if __name__ == '__main__':
     server = CherryPyWSGIServer(

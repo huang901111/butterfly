@@ -41,8 +41,8 @@ function start_procs()
         echo -e ${RED}"\n[ERROR]" ${NC}"Start $DISP_NAME failed, processes already runing."
         exit -1
     fi
-
-    $EXEC $MAIN_FILE $PROC_SIG 1>$STDOUT 2>&1 &
+    date >> $STDOUT
+    $EXEC $MAIN_FILE $PROC_SIG 1>>$STDOUT 2>&1 &
 
     sleep 1
     list_proc
@@ -63,7 +63,7 @@ function stop_procs()
         echo -e ${RED}"\n[ERROR]" ${NC}"$DISP_NAME process not found."
         exit -1
     fi
-    
+
     kill -15 $(list_proc_pids)
     count_proc
     while [ ${PROC_COUNT} -ne 0 ]; do
@@ -77,7 +77,7 @@ function stop_procs()
 function status_procs()
 {
     count_proc
-    echo -e ${RED}${PROC_COUNT}${NC} "$DISP_NAME processes runing."        
+    echo -e ${RED}${PROC_COUNT}${NC} "$DISP_NAME processes runing."
 }
 
 MODE=${1}
@@ -98,7 +98,7 @@ case ${MODE} in
     "status")
         status_procs
         ;;
-    
+
     *)
         # usage
         echo -e "\nUsage: $0 {start|stop|restart|status}"

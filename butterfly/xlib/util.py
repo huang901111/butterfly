@@ -9,6 +9,9 @@ import socket
 import traceback
 
 def is_digit_vars(variables):
+    """
+    Check if the variable is a number
+    """
     for var in variables:
         if isinstance(var, str) and var.isdigit():
             continue
@@ -17,16 +20,24 @@ def is_digit_vars(variables):
         else:
             return False
     return True
-            
+
 def write_pid(path):
+    """
+    Write PID
+    """
     open(path, "w").write(str(os.getpid()))
-    
+
+
+# ********************************************************
+# * Time lib                                             *
+# ********************************************************
 def nowstr():
     return time.strftime("%Y-%m-%d %H:%M:%S", time.localtime())
 
 def get_internet_tm(s):
     # http://tools.ietf.org/html/rfc2616.html#section-3.3
     return time.mktime(time.strptime(s, "%a, %d %b %Y %H:%M:%S GMT"))
+
 def mk_internet_tm(t):
     return time.strftime("%a, %d %b %Y %H:%M:%S GMT", time.gmtime(t))
 
@@ -38,21 +49,21 @@ def get_safevalue(cur, _min, _max):
     else:
         return cur
 
-class Base64_16:
+class Base64_16(object):
     @staticmethod
     def b16_to_b64(b16str):
         if len(b16str) % 2 == 0:
             return base64.b64encode(base64.b16decode(b16str, True), "()").strip("=")
         else:
             return "@" + b16str[0] + base64.b64encode(base64.b16decode(b16str[1:], True), "()").strip("=")
-    
+
     @staticmethod
     def b64_to_b16(b64str_v):
         if b64str_v[0] == "@":
             return b64str_v[1] + base64.b16encode(Base64_16.b64_to_bin(b64str_v[2:])).lower()
         else:
             return base64.b16encode(Base64_16.b64_to_bin(b64str_v)).lower()
-        
+
     @staticmethod
     def b64_to_bin(b64str):
         slen = len(b64str)
@@ -72,6 +83,9 @@ def weighted_choice_sub(weights):
         if rnd < 0:
             return i
 
+# ********************************************************
+# * IP lib                                               *
+# ********************************************************
 def ipv4_to_int(ipv4_str):
     try:
         fields = ipv4_str.split(".")
@@ -113,7 +127,7 @@ def dns_resolve(domain):
     global __DOMAIN_TO_IP
     if domain in __DOMAIN_TO_IP:
         return __DOMAIN_TO_IP[domain]
-    
+
     try:
         ip = socket.gethostbyname(domain)
         __DOMAIN_TO_IP[domain] = ip
