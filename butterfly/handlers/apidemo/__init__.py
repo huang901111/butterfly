@@ -5,9 +5,6 @@ import struct
 from xlib import util
 from xlib.httpgateway import Request
 from xlib import retstat
-import json
-
-from conf import logger_conf
 
 __info__ = "meetbill"
 __version__ = "1.0.1"
