@@ -83,5 +83,16 @@ def connect(url, unquote_password=False, **connect_params):
 if __name__ == "__main__":
     mysql_config_url="mysql+pool://root:password@127.0.0.1:3306/test?max_connections=300&stale_timeout=300"
     parsed = urlparse(mysql_config_url)
+    """_parseresult_to_dict(parsed)
+    {
+        'database': 'test',
+        'host': '127.0.0.1',
+        'user': 'root',
+        'stale_timeout': 300,
+        'password': 'password',
+        'port': 3306,
+        'max_connections': 300
+    }
+    """
     print _parseresult_to_dict(parsed)
 

@@ -4,6 +4,10 @@ Changelog
 
 本项目版本遵守 [Semantic Versioning] 和 [PEP-440]。
 
+## [1.0.6] - 2019-11-15
+### Changed
+- 添加 util [wrapt 1.11.2](https://github.com/GrahamDumpleton/wrapt)
+
 ## [1.0.5] - 2019-10-06
 ### Fixed
 - 修正请求静态文件时，日志中不打印静态文件信息以及状态码问题
