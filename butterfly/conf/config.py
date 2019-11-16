@@ -14,3 +14,6 @@ PATH_COMMON_LOG = "logs/common.log"
 # static
 STATIC_PATH = "static"
 STATIC_PREFIX="static"
+
+# DB
+mysql_config_url="mysql+pool://root:password@127.0.0.1:3306/test?max_connections=300&stale_timeout=300"

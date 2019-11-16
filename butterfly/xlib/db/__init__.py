@@ -3,16 +3,18 @@ try:
 except ImportError:
     from urllib.parse import parse_qsl, unquote, urlparse
 
-from peewee import *
+#from peewee import *
+import peewee
 from pool import PooledMySQLDatabase
+from conf import config
 
 
 schemes = {
-    'mysql': MySQLDatabase,
+    'mysql': peewee.MySQLDatabase,
     'mysql+pool': PooledMySQLDatabase,
-    'postgres': PostgresqlDatabase,
-    'postgresql': PostgresqlDatabase,
-    'sqlite': SqliteDatabase,
+    'postgres': peewee.PostgresqlDatabase,
+    'postgresql': peewee.PostgresqlDatabase,
+    'sqlite': peewee.SqliteDatabase,
 }
 
 def _parseresult_to_dict(parsed, unquote_password=False):
@@ -79,6 +81,14 @@ def connect(url, unquote_password=False, **connect_params):
                                parsed.scheme)
 
     return database_class(**connect_kwargs)
+
+
+my_msqldb = connect(url=config.mysql_config_url)
+
+class BaseModel(peewee.Model):
+    """Common base model"""
+    class Meta:
+        database = my_msqldb
 
 if __name__ == "__main__":
     mysql_config_url="mysql+pool://root:password@127.0.0.1:3306/test?max_connections=300&stale_timeout=300"
