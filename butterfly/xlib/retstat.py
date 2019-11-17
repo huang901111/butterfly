@@ -1,4 +1,4 @@
-
+# coding=utf8
 OK = "OK"
 ERR = "ERR"
 ERR_BAD_PARAMS = "ERR_BAD_PARAMS"
