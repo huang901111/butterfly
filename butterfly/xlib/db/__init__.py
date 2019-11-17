@@ -83,12 +83,12 @@ def connect(url, unquote_password=False, **connect_params):
     return database_class(**connect_kwargs)
 
 
-my_msqldb = connect(url=config.mysql_config_url)
+my_database = connect(url=config.mysql_config_url)
 
 class BaseModel(peewee.Model):
     """Common base model"""
     class Meta:
-        database = my_msqldb
+        database = my_database
 
 if __name__ == "__main__":
     mysql_config_url="mysql+pool://root:password@127.0.0.1:3306/test?max_connections=300&stale_timeout=300"
