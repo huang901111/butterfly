@@ -17,3 +17,6 @@ STATIC_PREFIX="static"
 
 # DB
 mysql_config_url="mysql+pool://root:password@127.0.0.1:3306/test?max_connections=300&stale_timeout=300"
+
+# Auth(If it is None, a key will be randomly generated each time butterfly is started)
+SECRET_KEY = None

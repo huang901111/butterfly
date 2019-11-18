@@ -9,7 +9,6 @@
 
 """
 
-from base64 import b64encode
 import os
 import threading
 import time
@@ -17,6 +16,8 @@ import uuid
 import traceback
 
 import jwt
+from base64 import b64encode
+from conf import config
 
 
 class Result(object):
@@ -35,7 +36,7 @@ class Result(object):
 class JwtManager(object):
     JWT_TOKEN_TTL = 28800  # default 8 hours
     JWT_ALGORITHM = 'HS256'
-    _secret = None
+    _secret = config.SECRET_KEY
 
     LOCAL_USER = threading.local()
 
@@ -140,9 +141,17 @@ if __name__ == "__main__":
     wsgienv["HTTP_AUTHORIZATION"] = "Bearer: {}".format(token)
     ip = "127.0.0.1"
     req = httpgateway.Request(reqid, wsgienv, ip)
-    token_status = is_token_valid(req)
-    if token_status.success:
-        print token_status.token_info
+    token_check = is_token_valid(req)
+    if token_check.success:
+        print token_check.token_info
+        """
+        {
+            u'iss': u'butterfly',
+            u'iat': 1574092901,
+            u'username': u'meetbill',
+            u'jti': u'5e7bde9b-1a22-4ad3-b0e8-845cb4dc9459',
+            u'exp': 1574121701}
+        """
         print "token:OK"
     else:
-        print token_status.err_content
+        print token_check.err_content
