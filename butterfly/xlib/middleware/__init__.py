@@ -1,5 +1,7 @@
 # coding=utf8
 
+import logging
+
 from xlib.db import  my_database
 from xlib.util import wrapt
 from xlib import auth
@@ -19,6 +21,8 @@ def login_required(wrapped, instance, args, kwargs):
     """
     if "req" in kwargs:
         req = kwargs["req"]
+        log_msg = "[reqid]:{reqid} [wsgienv]:{wsgienv}".format(reqid=req.reqid,wsgienv=str(req.wsgienv))
+        logging.info(log_msg)
         token_check = auth.is_token_valid(req)
         if not token_check.success:
             return token_check.err_content
