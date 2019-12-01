@@ -19,6 +19,25 @@ import uuid64
 
 __version__ = "1.0.6"
 
+def parse_cookie(cookie):
+    """
+    Return a dictionary parsed from a `Cookie:` header string.
+
+    Args:
+        cookie: (str)environ["HTTP_COOKIE"]
+    Return:
+        cookie dict
+    """
+    r = {}
+    if not cookie:
+        return r
+    for item in cookie.split(";"):
+        item = item.strip(" ")
+        kv = item.split("=")
+        if len(kv) == 2:
+            r[kv[0].strip(" ")] = kv[1].strip(" ")
+    return r
+
 class Request(object):
     """Request Class
 
@@ -76,6 +95,10 @@ class Request(object):
                 pass
         else:
             self.log_stat[name] = cost
+
+    def cookies(self):
+        cookie = self.wsgienv.get('HTTP_COOKIE', '')
+        return parse_cookie(cookie)
 
 
 class WSGIGateway(object):
@@ -294,18 +317,6 @@ def get_uri_head_sec(uri):
     if j < 0:
         j = len(uri)
     return uri[i: j].encode("ascii")
-
-
-def get_cookie_param(s):
-    r = {}
-    if not s:
-        return r
-    for item in s.split(";"):
-        item = item.strip(" ")
-        kv = item.split("=")
-        if len(kv) == 2:
-            r[kv[0].strip(" ")] = kv[1].strip(" ")
-    return r
 
 
 def read_wsgi_post(wsgienv):

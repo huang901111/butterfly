@@ -9,6 +9,7 @@ Changelog
 - 添加 util [wrapt 1.11.2](https://github.com/GrahamDumpleton/wrapt)
 - 添加 test_handler.py 用于方便测试 handlers 方法输出
 - 添加 middleware
+- 添加 cookie 解析
 
 ## [1.0.5] - 2019-10-06
 ### Fixed
