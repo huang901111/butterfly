@@ -26,5 +26,7 @@ def login_required(wrapped, instance, args, kwargs):
         token_check = auth.is_token_valid(req)
         if not token_check.success:
             return token_check.err_content
+        else:
+            req.username = token_check.token_info["username"]
     result = wrapped(*args,**kwargs)
     return result

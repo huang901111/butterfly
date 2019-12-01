@@ -76,6 +76,7 @@ class Request(object):
         self.error_str = ""
         self.init_tm = time.time()
         self._tm = self.init_tm
+        self.username = ""
 
     def log(self, logger, logline):
         _logline = "%s %s" % (self.reqid, logline)
@@ -204,8 +205,17 @@ class WSGIGateway(object):
                                 for k, v in req.log_stat.iteritems())
             log_params_str = ",".join("%s:%s" % (k, v)
                                       for k, v in req.log_params.iteritems())
-            self._acclog.log("%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\tres:%s" %
-                             (req.ip, req.reqid, req.funcname, cost_str, req.log_ret_code, stat_str, log_params_str, req.error_str, ",".join(req.log_res)))
+            self._acclog.log("%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\tres:%s\tuser:%s" %
+                            (req.ip,
+                            req.reqid,
+                            req.funcname,
+                            cost_str,
+                            req.log_ret_code,
+                            stat_str,
+                            log_params_str,
+                            req.error_str,
+                            ",".join(req.log_res),
+                            req.username))
         except BaseException:
             try:
                 self._errlog.log("%s %s %s Make Acclog Error %s" % (req.reqid, req.ip, req.funcname, traceback.format_exc()))

@@ -6,10 +6,11 @@ Changelog
 
 ## [1.0.6] - 2019-11-15
 ### Changed
-- 添加 util [wrapt 1.11.2](https://github.com/GrahamDumpleton/wrapt)
-- 添加 test_handler.py 用于方便测试 handlers 方法输出
-- 添加 middleware
-- 添加 cookie 解析
+- butterfly 添加 test_handler.py 用于方便测试 handlers 方法输出
+- xlib 添加 middleware
+- xlib 添加 util [wrapt 1.11.2](https://github.com/GrahamDumpleton/wrapt)
+- request 添加 cookie 解析
+- request 添加 user 属性
 
 ## [1.0.5] - 2019-10-06
 ### Fixed
