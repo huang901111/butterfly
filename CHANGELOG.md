@@ -4,6 +4,10 @@ Changelog
 
 本项目版本遵守 [Semantic Versioning] 和 [PEP-440]。
 
+## [1.0.7] - 2019-12-02
+### Changed
+- 添加 redirect 重定向
+
 ## [1.0.6] - 2019-11-15
 ### Changed
 - butterfly 添加 test_handler.py 用于方便测试 handlers 方法输出

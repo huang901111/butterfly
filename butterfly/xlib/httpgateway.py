@@ -17,7 +17,7 @@ from inspect import ismethod
 
 import uuid64
 
-__version__ = "1.0.6"
+__version__ = "1.0.7"
 
 def parse_cookie(cookie):
     """
@@ -375,3 +375,11 @@ def get_func_name(wsgienv):
     else:
         func_name = path.encode("ascii")
     return func_name
+
+
+def redirect(req, url, code=None):
+    """ Aborts execution and causes a 303 or 302 redirect, depending on
+        the HTTP protocol version. """
+    if not code:
+        code = 303 if req.wsgienv.get('SERVER_PROTOCOL') == "HTTP/1.1" else 302
+    return code,{},[("Location",url)]
