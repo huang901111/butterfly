@@ -49,7 +49,9 @@ curl -v "http://127.0.0.1:8585/x/hello?str_info=meetbill"   ===> handlers/x::hel
 ## 3 使用手册
 
 * [Butterfly 手册](https://github.com/meetbill/butterfly/wiki)
-* [Butterfly 示例](https://github.com/meetbill/butterfly_examples)
+* [Butterfly 示例](https://github.com/meetbill/butterfly-examples)
+* [Butterfly 前端](https://github.com/meetbill/butterfly-fe)
+* [Butterfly nginx 配置](https://github.com/meetbill/butterfly-nginx)
 
 ## 4 版本信息
 
