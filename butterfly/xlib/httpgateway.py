@@ -38,6 +38,7 @@ def parse_cookie(cookie):
             r[kv[0].strip(" ")] = kv[1].strip(" ")
     return r
 
+
 class Request(object):
     """Request Class
 

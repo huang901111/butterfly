@@ -6,6 +6,9 @@ from conf import logger_conf
 from conf import config
 from xlib import urls
 
+# ********************************************************
+# * Route                                                *
+# ********************************************************
 route = urls.Route(logger_conf.infolog, logger_conf.errlog)
 # 自动将 handlers 目录加 package 自动注册
 route.autoload_handler("handlers")
