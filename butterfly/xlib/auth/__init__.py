@@ -24,9 +24,9 @@ class Result(object):
     """
     Auth result
     """
-    def __init__(self, retcode=None, err_info=None,token_info=None):
+    def __init__(self, retcode=None, message=None,token_info=None):
         self.retcode = retcode
-        self.err_content = (retcode,{"stat": "ERR", "err_info": err_info})
+        self.err_content = (retcode,{"success": False, "message": message})
         self.token_info = token_info
         self.success = False
         if retcode == 0:
@@ -119,16 +119,16 @@ def is_token_valid(req):
     JwtManager.reset_user()
     token = JwtManager.get_token_from_header(req)
     if not token:
-        return Result(retcode=401, err_info="You are not authorized")
+        return Result(retcode=401, message="You are not authorized")
     try:
         token_info = JwtManager.decode_token(token)
         return Result(retcode=0,token_info=token_info)
     except jwt.exceptions.ExpiredSignatureError:
-        return Result(retcode=401, err_info="Token has expired")
+        return Result(retcode=401, message="Token has expired")
     except jwt.exceptions.InvalidTokenError:
-        return Result(retcode=401, err_info="Failed to decode token")
+        return Result(retcode=401, message="Failed to decode token")
     except Exception:
-        return Result(retcode=401, err_info=traceback.format_exc())
+        return Result(retcode=401, message=traceback.format_exc())
 
 if __name__ == "__main__":
     token = gen_token("meetbill")
