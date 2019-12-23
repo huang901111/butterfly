@@ -34,8 +34,8 @@ class Result(object):
 
 
 class JwtManager(object):
-    JWT_TOKEN_TTL = 28800  # default 8 hours
     JWT_ALGORITHM = 'HS256'
+    JWT_TOKEN_TTL = config.JWT_TOKEN_TTL
     _secret = config.SECRET_KEY
 
     LOCAL_USER = threading.local()

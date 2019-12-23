@@ -11,6 +11,7 @@
 import traceback
 import json
 import httplib
+import logging
 from collections import Iterable
 
 from httpgateway import check_param
@@ -120,7 +121,11 @@ class Protocol(object):
 
         # 返回值校验
         try:
+            log_msg = "[butterfly Request] [reqid]:{reqid} [wsgienv]:{wsgienv}".format(reqid=req.reqid,wsgienv=str(req.wsgienv))
+            logging.debug(log_msg)
             ret = self._func(**params)
+            log_msg = "[butterfly Response] [reqid]:{reqid} [ret]:{ret}".format(reqid=req.reqid,ret=str(ret))
+            logging.debug(log_msg)
             headers = []
             if self._is_encode_response:
                 code = self._code_err

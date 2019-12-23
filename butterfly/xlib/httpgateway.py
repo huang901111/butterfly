@@ -141,7 +141,8 @@ class WSGIGateway(object):
         reqid = self._uuid64.gen()
         req = Request(reqid, wsgienv, ip)
         try:
-            ip = wsgienv.get("HTTP_SRC_ADDR") or wsgienv.get("REMOTE_ADDR")
+            # 如果使用 nginx ，则需要在 nginx 上配置 "proxy_set_header X-Real-IP  $remote_addr;" 获取真实源 IP
+            ip = wsgienv.get("HTTP_X_REAL_IP") or wsgienv.get("REMOTE_ADDR")
             assert ip
             req.ip = ip
 
