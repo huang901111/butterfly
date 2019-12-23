@@ -119,14 +119,14 @@ def is_token_valid(req):
     JwtManager.reset_user()
     token = JwtManager.get_token_from_header(req)
     if not token:
-        return Result(retcode=401, message="You are not authorized")
+        return Result(retcode=401, message="You are not authorized: Not found token")
     try:
         token_info = JwtManager.decode_token(token)
         return Result(retcode=0,token_info=token_info)
     except jwt.exceptions.ExpiredSignatureError:
-        return Result(retcode=401, message="Token has expired")
+        return Result(retcode=401, message="You are not authorized: Token has expired")
     except jwt.exceptions.InvalidTokenError:
-        return Result(retcode=401, message="Failed to decode token")
+        return Result(retcode=401, message="You are not authorized: Failed to decode token")
     except Exception:
         return Result(retcode=401, message=traceback.format_exc())
 
