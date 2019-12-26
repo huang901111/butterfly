@@ -1,21 +1,14 @@
 # coding=utf8
-"""
-Butterfly 常用装饰器
-"""
 
 import logging
 
-from xlib.db import my_database
+from xlib.db import  my_database
 from xlib.util import wrapt
 from xlib import auth
 
-
 @wrapt.decorator
 def db_close(wrapped, instance, args, kwargs):
-    """
-    用于执行 handler 处理请求完后关闭 mysql 连接
-    """
-    result = wrapped(*args, **kwargs)
+    result = wrapped(*args,**kwargs)
     if not my_database.is_closed():
         my_database.close()
     return result
@@ -33,15 +26,14 @@ def login_required(wrapped, instance, args, kwargs):
     """
     if "req" in kwargs:
         req = kwargs["req"]
-        log_msg = "[reqid]:{reqid} [wsgienv]:{wsgienv}".format(
-            reqid=req.reqid, wsgienv=str(req.wsgienv))
+        log_msg = "[reqid]:{reqid} [wsgienv]:{wsgienv}".format(reqid=req.reqid,wsgienv=str(req.wsgienv))
         logging.info(log_msg)
         token_check = auth.is_token_valid(req)
         if not token_check.success:
             return token_check.err_content
         else:
             req.username = token_check.token_info["username"]
-    result = wrapped(*args, **kwargs)
+    result = wrapped(*args,**kwargs)
     return result
 
 
@@ -64,13 +56,13 @@ def login_required_nginx(wrapped, instance, args, kwargs):
         # 认证失败时返回 401，及需要跳转的登录地址放到 header 中
         # 可通过此配置 "auth_request_set    $butterfly_location $upstream_http_location;" 将要跳转的地址传给 Nginx 的 $butterfly_location 变量
         if not token_check.success:
-            http_code, context = token_check.err_content
+            http_code , context = token_check.err_content
             protocol = "http://"
             host = req.wsgienv.get("HTTP_HOST")
             login_url = protocol + host + "/auth/ssologin"
-            return http_code, context, [("Location", login_url)]
+            return http_code ,context ,[("Location",login_url)]
         else:
             req.username = token_check.token_info["username"]
 
-    result = wrapped(*args, **kwargs)
+    result = wrapped(*args,**kwargs)
     return result

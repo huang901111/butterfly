@@ -31,7 +31,7 @@ def test_auth():
     req = httpgateway.Request(reqid, wsgienv, ip)
     token_status = auth.is_token_valid(req)
     assert token_status.success == False
-    assert token_status.err_content == (401,{'err_info': 'You are not authorized', 'stat': 'ERR'})
+    assert token_status.err_content == (401,{'message': 'You are not authorized: Not found token', 'success': False})
 
     # ERR: You are not authorized
     wsgienv = {
@@ -40,7 +40,7 @@ def test_auth():
     req = httpgateway.Request(reqid, wsgienv, ip)
     token_status = auth.is_token_valid(req)
     assert token_status.success == False
-    assert token_status.err_content == (401,{'err_info': 'Failed to decode token', 'stat': 'ERR'})
+    assert token_status.err_content == (401,{'message': 'You are not authorized: Failed to decode token', 'success': False})
 
     # ERR: Token has expired
     auth.JwtManager.init(secret="meetbill")
@@ -51,4 +51,4 @@ def test_auth():
     req = httpgateway.Request(reqid, wsgienv, ip)
     token_status = auth.is_token_valid(req)
     assert token_status.success == False
-    assert token_status.err_content == (401,{'err_info': 'Token has expired', 'stat': 'ERR'})
+    assert token_status.err_content == (401,{'message': 'You are not authorized: Token has expired', 'success': False})

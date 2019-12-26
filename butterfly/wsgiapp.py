@@ -1,4 +1,7 @@
 # coding:utf8
+"""
+路由处理及 wsgigw 定义
+"""
 
 from xlib import httpgateway
 
@@ -28,6 +31,15 @@ wsgigw = httpgateway.WSGIGateway(
 
 
 def application(environ, start_response):
+    """
+    The main WSGI application.
+
+    Args:
+        environ: The HTTP application environment
+        start_response: The application to run when the handling of the request is done
+    Returns:
+        The response as a list of lines
+    """
     try:
         status, headders, content = wsgigw.process(environ)
         start_response(status, headders)
@@ -47,7 +59,7 @@ if __name__ == '__main__':
     else:
         port = 8000
     print "[Debug][Single-Threaded] HTTP listening on 0.0.0.0:%s..." % port
-    from wsgiref.simple_server import make_server
+    import wsgiref.simple_server
 
-    httpd = make_server('', port, application)
+    httpd = wsgiref.simple_server.make_server('', port, application)
     httpd.serve_forever()

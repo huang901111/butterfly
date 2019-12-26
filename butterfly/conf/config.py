@@ -1,3 +1,7 @@
+# coding:utf8
+"""
+Butterfly config
+"""
 
 SERVER_LISTEN_ADDR = ("0.0.0.0", 8585)
 SERVER_THREAD_NUM = 16

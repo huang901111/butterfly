@@ -13,11 +13,12 @@ import traceback
 import urlparse
 import time
 import httplib
-from inspect import ismethod
+import inspect
 
-import uuid64
+import xlib.uuid64
 
 __version__ = "1.0.7"
+
 
 def parse_cookie(cookie):
     """
@@ -80,13 +81,23 @@ class Request(object):
         self.username = ""
 
     def log(self, logger, logline):
+        """butterfly req log
+        主要用于记录异常日志以及其他类型日志，日志中会记录 reqid
+        Args:
+            logger: logger Instance
+            logline: log msg
+        Examples:
+            req.log(self._errlog, "Json dump failed\n%s" % traceback.format_exc())
+        """
         _logline = "%s %s" % (self.reqid, logline)
         logger.log(_logline)
 
     def start_timming(self):
+        """set _tm"""
         self._tm = time.time()
 
     def timming(self, name):
+        """获取从 _tm 到当前的耗时"""
         tm = time.time()
         cost = tm - self._tm
         self._tm = tm
@@ -99,6 +110,7 @@ class Request(object):
             self.log_stat[name] = cost
 
     def cookies(self):
+        """parse cookie"""
         cookie = self.wsgienv.get('HTTP_COOKIE', '')
         return parse_cookie(cookie)
 
@@ -126,7 +138,7 @@ class WSGIGateway(object):
         self._apiname_getter = funcname_getter
         self._acclog = acclog
         self._errlog = errlog
-        self._uuid64 = uuid64.UUID64()
+        self._uuid64 = xlib.uuid64.UUID64()
         self._static_path = static_path
         self._static_prefix = static_prefix
 
@@ -157,13 +169,15 @@ class WSGIGateway(object):
             if not protocol:
                 return self._mk_err_ret(req, 400, "API Not Found", "")
         except BaseException:
-            return self._mk_err_ret(req, 400, "Get API Exception", "Get API Exception %s" % traceback.format_exc())
+            return self._mk_err_ret(
+                req, 400, "Get API Exception", "Get API Exception %s" % traceback.format_exc())
 
         try:
             httpstatus, headers, content = protocol(req)
             # httpstatus, headers, content = "200 OK", [], ""
         except BaseException:
-            return self._mk_err_ret(req, 500, "API Processing Error", "API Processing Error %s" % traceback.format_exc())
+            return self._mk_err_ret(
+                req, 500, "API Processing Error", "API Processing Error %s" % traceback.format_exc())
 
         return self._mk_ret(req, httpstatus, headers, content)
 
@@ -197,30 +211,30 @@ class WSGIGateway(object):
         cost = time.time() - req.init_tm
         cost_str = "%.6f" % cost
         try:
-            headers.append(("butterfly",__version__))
+            headers.append(("butterfly", __version__))
             headers.append(("x-reqid", req.reqid))
             # cost time
             headers.append(("x-cost", cost_str))
             if req.error_str:
                 headers.append(("x-reason", req.error_str))
-            stat_str = ",".join("%s:%.3f" % (k, v)
-                                for k, v in req.log_stat.iteritems())
-            log_params_str = ",".join("%s:%s" % (k, v)
-                                      for k, v in req.log_params.iteritems())
+            stat_str = ",".join("%s:%.3f" % (k, v) for k, v in req.log_stat.iteritems())
+            log_params_str = ",".join("%s:%s" % (k, v) for k, v in req.log_params.iteritems())
             self._acclog.log("%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\tres:%s\tuser:%s" %
-                            (req.ip,
-                            req.reqid,
-                            req.funcname,
-                            cost_str,
-                            req.log_ret_code,
-                            stat_str,
-                            log_params_str,
-                            req.error_str,
-                            ",".join(req.log_res),
-                            req.username))
+                             (req.ip,
+                              req.reqid,
+                              req.funcname,
+                              cost_str,
+                              req.log_ret_code,
+                              stat_str,
+                              log_params_str,
+                              req.error_str,
+                              ",".join(req.log_res),
+                              req.username))
         except BaseException:
             try:
-                self._errlog.log("%s %s %s Make Acclog Error %s" % (req.reqid, req.ip, req.funcname, traceback.format_exc()))
+                self._errlog.log(
+                    "%s %s %s Make Acclog Error %s" %
+                    (req.reqid, req.ip, req.funcname, traceback.format_exc()))
             except BaseException:
                 traceback.print_exc()
 
@@ -247,9 +261,11 @@ class WSGIGateway(object):
                     data = [data]
                     return self._mk_ret(req, httpstatus, headers, data)
             except BaseException:
-                return self._mk_err_ret(req, 500, "Read File Error", "Read File Error %s" % traceback.format_exc())
+                return self._mk_err_ret(
+                    req, 500, "Read File Error", "Read File Error %s" % traceback.format_exc())
         else:
-            return self._mk_err_ret(req, 404, "File Not Found", "File Not Found,path:{file_path}".format(file_path=file_path))
+            return self._mk_err_ret(
+                req, 404, "File Not Found", "File Not Found,path:{file_path}".format(file_path=file_path))
 
     def _try_to_handler_static(self, wsgienv):
         """
@@ -277,6 +293,16 @@ class WSGIGateway(object):
 
 
 def httpget2dict(qs):
+    """
+    解析 http get 请求参数
+
+    Args:
+        qs: req.wsgienv["QUERY_STRING"]
+    Returns:
+        ret: (dict) HTTP get 请求参数字典
+    Examples:
+        params = httpget2dict(req.wsgienv.get("QUERY_STRING"))
+    """
     if not qs:
         return {}
     else:
@@ -291,8 +317,19 @@ def httpget2dict(qs):
 
 
 def check_param(func, params):
+    """
+    检查 hander 方法与请求参数是否一致
+
+    Args:
+        func: hander 方法
+        params: 请求参数
+    Returns:
+        True/False
+    Examples:
+        check_param(self._func, params)
+    """
     args_count = func.func_code.co_argcount - \
-        1 if ismethod(func) else func.func_code.co_argcount
+        1 if inspect.ismethod(func) else func.func_code.co_argcount
     args = func.func_code.co_varnames[:args_count]
 
     for arg in params:
@@ -311,6 +348,12 @@ def check_param(func, params):
 
 
 def get_uri_tail_sec(uri):
+    """
+    获取 uri 最后一段 section
+
+    Examples:
+        get_uri_tail_sec("/app/list") ==> list
+    """
     if uri.endswith("/"):
         i = uri.rfind("/", 0, -1)
         sec = uri[i + 1: -1].encode("ascii")
@@ -321,6 +364,12 @@ def get_uri_tail_sec(uri):
 
 
 def get_uri_head_sec(uri):
+    """
+    获取 uri head 一段 section
+
+    Examples:
+        get_uri_tail_sec("/app/list") ==> app
+    """
     if not uri:
         return ""
     i = 1 if uri[0] == "/" else 0
@@ -332,6 +381,12 @@ def get_uri_head_sec(uri):
 
 
 def read_wsgi_post(wsgienv):
+    """
+    获取 post 数据
+
+    Examples:
+        post_data = read_wsgi_post(req.wsgienv)
+    """
     post_len = wsgienv.get("CONTENT_LENGTH")
     post_len = int(post_len) if post_len else 0
     if post_len:
@@ -341,6 +396,9 @@ def read_wsgi_post(wsgienv):
 
 
 def parse_multipart_raw(s):
+    """
+    获取 multipart/form-data 的raw data
+    """
     ret = {}
     lines = s.split("\n")
     for i in range(0, 4 * (len(lines) / 4), 4):
@@ -384,4 +442,4 @@ def redirect(req, url, code=None):
         the HTTP protocol version. """
     if not code:
         code = 303 if req.wsgienv.get('SERVER_PROTOCOL') == "HTTP/1.1" else 302
-    return code,{},[("Location",url)]
+    return code, {}, [("Location", url)]

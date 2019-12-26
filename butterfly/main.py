@@ -1,5 +1,8 @@
-import resource
-import signal
+# coding=utf8
+"""
+Butterfly main
+"""
+
 import os
 import sys
 

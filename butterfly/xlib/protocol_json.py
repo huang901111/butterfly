@@ -117,14 +117,16 @@ class Protocol(object):
             if not check_param(self._func, params):
                 return self._mk_err_ret(req, True, "Param check failed", "%s Param check failed" % req.ip)
         except BaseException:
-            return self._mk_err_ret(req, True, "Param check exception", "%s Param check failed\n%s" % (req.ip, traceback.format_exc()))
+            return self._mk_err_ret(req, True, "Param check exception",
+                                    "%s Param check failed\n%s" % (req.ip, traceback.format_exc()))
 
         # 返回值校验
         try:
-            log_msg = "[butterfly Request] [reqid]:{reqid} [wsgienv]:{wsgienv}".format(reqid=req.reqid,wsgienv=str(req.wsgienv))
+            log_msg = "[butterfly Request] [reqid]:{reqid} [wsgienv]:{wsgienv}".format(
+                reqid=req.reqid, wsgienv=str(req.wsgienv))
             logging.debug(log_msg)
             ret = self._func(**params)
-            log_msg = "[butterfly Response] [reqid]:{reqid} [ret]:{ret}".format(reqid=req.reqid,ret=str(ret))
+            log_msg = "[butterfly Response] [reqid]:{reqid} [ret]:{ret}".format(reqid=req.reqid, ret=str(ret))
             logging.debug(log_msg)
             headers = []
             if self._is_encode_response:
@@ -155,19 +157,22 @@ class Protocol(object):
                     return self._mk_err_ret(req, False, "Invalid ret format", "Invalid ret format %s" % type(ret))
 
                 if not isinstance(data, Iterable):
-                    return self._mk_err_ret(req, False, "Invalid ret format", "Invalid ret format, data %s" % type(data))
+                    return self._mk_err_ret(req, False, "Invalid ret format",
+                                            "Invalid ret format, data %s" % type(data))
                 elif not isinstance(status, int):
-                    return self._mk_err_ret(req, False, "Invalid ret format", "Invalid ret format, status %s" % type(status))
+                    return self._mk_err_ret(req, False, "Invalid ret format",
+                                            "Invalid ret format, status %s" % type(status))
 
-                if isinstance(data,dict):
+                if isinstance(data, dict):
                     data = self._mk_json_content(data)
                     headers.append(("Content-Length", str(len(data))))
-                    headers.append(("Content-Type","application/json"))
+                    headers.append(("Content-Type", "application/json"))
                 else:
-                    headers.append(("Content-Type","text/html"))
+                    headers.append(("Content-Type", "text/html"))
 
                 req.log_ret_code = status
                 status_line = "%s %s" % (status, httplib.responses.get(status, ""))
                 return status_line, headers, data
         except BaseException:
-            return self._mk_err_ret(req, False, "API Processing Exception", "Server exception\n%s" % traceback.format_exc())
+            return self._mk_err_ret(req, False, "API Processing Exception",
+                                    "Server exception\n%s" % traceback.format_exc())
