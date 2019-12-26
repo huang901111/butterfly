@@ -11,7 +11,7 @@ __info__ = "meetbill"
 __version__ = "1.0.1"
 
 
-def ssologin(req,ticket=""):
+def ssologin(req, ticket=""):
     """
     ssologin
     """
@@ -26,7 +26,7 @@ def ssologin(req,ticket=""):
     # header 处理
     protocol = "http://"
     host = req.wsgienv.get("HTTP_HOST")
-    homepage =protocol + host
+    homepage = protocol + host
     C = Cookie.SimpleCookie()
     C["butterfly_token"] = token
     C['butterfly_token']['domain'] = '.baidu.com'
@@ -36,10 +36,12 @@ def ssologin(req,ticket=""):
         header_list.append(('Set-Cookie', c.OutputString()))
 
     header_list.append((__info__, __version__))
-    header_list.append(("Location",homepage))
+    header_list.append(("Location", homepage))
 
-    context={"success":True,"message":"{username} login success".format(username=username),"data":{"butterfly_token":token}}
+    context = {"success": True, "message": "{username} login success".format(username=username), "data": {
+        "butterfly_token": token}}
     return retstat.HTTP_REDIRECT, context, header_list
+
 
 @middleware.login_required_nginx
 def verification(req):
@@ -47,5 +49,5 @@ def verification(req):
     auth verification
     """
     isinstance(req, Request)
-    context=""
+    context = ""
     return retstat.HTTP_OK, context

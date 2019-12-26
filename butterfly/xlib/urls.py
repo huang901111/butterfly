@@ -100,7 +100,8 @@ class Route(object):
             args_count = func.func_code.co_argcount - 1 if inspect.ismethod(func) else func.func_code.co_argcount
             func_args = func.func_code.co_varnames[:args_count]
             self._infolog.log(
-                    "[Init handler] {path:20} [args]:{func_args:30} [is_parse_post]:{is_parse_post} [is_encode_response]:{is_encode_response}".format(
+                    "[Init handler] {path:20} [args]:{func_args:30} [is_parse_post]:{is_parse_post}" \
+                    " [is_encode_response]:{is_encode_response}".format(
                     path=path_name,
                     func_args=func_args,
                     is_parse_post=adder_args[0],
@@ -125,4 +126,7 @@ class Route(object):
                 package_name=package_name)
 
     def get_route(self):
+        """
+        获取路由 dict
+        """
         return self.apicube

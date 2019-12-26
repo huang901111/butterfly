@@ -1,13 +1,19 @@
 # coding:utf8
-
+"""
+用于生成 reqid
+"""
 import uuid
 import ctypes
 import os
 import base64
-import pyDes
+
+from xlib import pyDes
 
 
 class UUID64(object):
+    """
+    UUID64 Class
+    """
 
     ENC_KEY = "ZDgxN2Q4"
 
@@ -26,6 +32,12 @@ class UUID64(object):
         self._host_id = raw[-2:]
 
     def gen(self):
+        """
+        生成 reqid
+
+        Returns:
+            reqid: (str), 16 位 example:9602CFF26E1E6FED
+        """
         self.counter += 1
 
         if uuid._uuid_generate_time:
