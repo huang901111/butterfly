@@ -1,4 +1,8 @@
 # coding=utf8
+"""
+HTTP 状态码及自定义返回信息
+"""
+
 OK = "OK"
 ERR = "ERR"
 ERR_BAD_PARAMS = "ERR_BAD_PARAMS"

@@ -1,5 +1,8 @@
 #!/usr/bin/python
 # coding=utf8
+"""
+用于单点登录以及接口认证
+"""
 from xlib.httpgateway import Request
 from xlib import retstat
 from xlib import middleware

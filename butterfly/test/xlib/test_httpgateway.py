@@ -18,6 +18,7 @@ def test_check_param():
     params3 = {"param_a":"test"}
     params4 = {"param_a":"test","param_b":"test","param_c":"test"}
     def hello(param_a,param_b):
+        print param_a,param_b
         pass
     # True
     assert httpgateway.check_param(hello,params1)

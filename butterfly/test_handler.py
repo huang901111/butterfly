@@ -41,7 +41,7 @@ if __name__ == "__main__":
     wsgienv={"PATH_INFO":"/echo"}
     req = httpgateway.Request(reqid, wsgienv, ip)
 
-    import sys, inspect
+    import inspect
     if len(sys.argv) < 2:
         print "Usage:"
         for url in apicube:

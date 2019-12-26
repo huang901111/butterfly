@@ -12,11 +12,9 @@ import traceback
 import json
 import httplib
 import logging
-from collections import Iterable
+import collections
 
-from httpgateway import check_param
-from httpgateway import httpget2dict
-from httpgateway import read_wsgi_post
+from xlib import httpgateway
 
 
 class Protocol(object):
@@ -103,9 +101,9 @@ class Protocol(object):
     def __call__(self, req):
         # 请求参数获取和检查
         try:
-            params = httpget2dict(req.wsgienv.get("QUERY_STRING"))
+            params = httpgateway.httpget2dict(req.wsgienv.get("QUERY_STRING"))
             if self._is_parse_post and req.wsgienv.get("REQUEST_METHOD") == "POST":
-                post_data = read_wsgi_post(req.wsgienv)
+                post_data = httpgateway.read_wsgi_post(req.wsgienv)
                 if post_data:
                     post_params = json.loads(post_data)
                     for k, v in post_params.iteritems():
@@ -114,7 +112,7 @@ class Protocol(object):
 
             params["req"] = req
 
-            if not check_param(self._func, params):
+            if not httpgateway.check_param(self._func, params):
                 return self._mk_err_ret(req, True, "Param check failed", "%s Param check failed" % req.ip)
         except BaseException:
             return self._mk_err_ret(req, True, "Param check exception",
@@ -156,7 +154,7 @@ class Protocol(object):
                 else:
                     return self._mk_err_ret(req, False, "Invalid ret format", "Invalid ret format %s" % type(ret))
 
-                if not isinstance(data, Iterable):
+                if not isinstance(data, collections.Iterable):
                     return self._mk_err_ret(req, False, "Invalid ret format",
                                             "Invalid ret format, data %s" % type(data))
                 elif not isinstance(status, int):

@@ -1,4 +1,7 @@
 # coding:utf8
+"""
+Log manage module
+"""
 
 import time
 import traceback

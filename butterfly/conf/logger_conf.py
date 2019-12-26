@@ -1,4 +1,10 @@
 #coding:utf8
+"""
+初始化配置日志
+
+acclog: Butterfly 访问日志
+errlog: Butterfly 错误日志
+"""
 
 from xlib import logger
 import config

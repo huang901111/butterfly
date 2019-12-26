@@ -7,7 +7,7 @@ import ctypes
 import os
 import base64
 
-from xlib import pyDes
+from xlib.util import pyDes
 
 
 class UUID64(object):
