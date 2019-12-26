@@ -6,6 +6,7 @@ Butterfly 工具 module
 import time
 import os
 import urlparse
+import base64
 
 
 def is_digit_vars(variables):
@@ -41,6 +42,34 @@ def nowstr():
         '2019-12-26 22:22:52'
     """
     return time.strftime("%Y-%m-%d %H:%M:%S", time.localtime())
+
+
+class Base64_16(object):
+    @staticmethod
+    def b16_to_b64(b16str):
+        if len(b16str) % 2 == 0:
+            return base64.b64encode(base64.b16decode(b16str, True), "()").strip("=")
+        else:
+            return "@" + b16str[0] + base64.b64encode(base64.b16decode(b16str[1:], True), "()").strip("=")
+
+    @staticmethod
+    def b64_to_b16(b64str_v):
+        if b64str_v[0] == "@":
+            return b64str_v[1] + base64.b16encode(Base64_16.b64_to_bin(b64str_v[2:])).lower()
+        else:
+            return base64.b16encode(Base64_16.b64_to_bin(b64str_v)).lower()
+
+    @staticmethod
+    def b64_to_bin(b64str):
+        slen = len(b64str)
+        tail = slen % 4
+        if tail:
+            b64str += ("=" * (4 - tail))
+        return base64.b64decode(b64str, "()")
+
+    @staticmethod
+    def bin_to_b64(b):
+        return base64.b64encode(b, "()").strip("=")
 
 
 def get_internet_tm(s):
