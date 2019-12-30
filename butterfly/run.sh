@@ -80,10 +80,22 @@ function status_procs()
     echo -e ${RED}${PROC_COUNT}${NC} "$DISP_NAME processes runing."
 }
 
+function docker_start_procs()
+{
+    printf "Starting $DISP_NAME processes"
+    count_proc
+    date >> $STDOUT
+    $EXEC $MAIN_FILE $PROC_SIG
+}
+
 MODE=${1}
 case ${MODE} in
     "start")
         start_procs
+        ;;
+
+    "docker_start")
+        docker_start_procs
         ;;
 
     "stop")
@@ -102,10 +114,11 @@ case ${MODE} in
     *)
         # usage
         echo -e "\nUsage: $0 {start|stop|restart|status}"
-        echo -e ${WITE}" start   "${NC}"Start $DISP_NAME processes."
-        echo -e ${WITE}" stop    "${NC}"Kill all $DISP_NAME processes."
-        echo -e ${WITE}" restart "${NC}"Kill all $DISP_NAME processes and start again."
-        echo -e ${WITE}" status  "${NC}"Show $DISP_NAME processes status.\n"
+        echo -e ${WITE}" start          "${NC}"Start $DISP_NAME processes."
+        echo -e ${WITE}" docker_start   "${NC}"Start $DISP_NAME processes for docker."
+        echo -e ${WITE}" stop           "${NC}"Kill all $DISP_NAME processes."
+        echo -e ${WITE}" restart        "${NC}"Kill all $DISP_NAME processes and start again."
+        echo -e ${WITE}" status         "${NC}"Show $DISP_NAME processes status.\n"
         exit 1
         ;;
 esac
