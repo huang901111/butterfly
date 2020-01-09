@@ -17,7 +17,7 @@ import inspect
 
 import xlib.uuid64
 
-__version__ = "1.0.7"
+__version__ = "1.0.8"
 
 
 def parse_cookie(cookie):
@@ -78,7 +78,7 @@ class Request(object):
         self.error_str = ""
         self.init_tm = time.time()
         self._tm = self.init_tm
-        self.username = ""
+        self.username = "-"
 
     def log(self, logger, logline):
         """butterfly req log
@@ -219,17 +219,17 @@ class WSGIGateway(object):
                 headers.append(("x-reason", req.error_str))
             stat_str = ",".join("%s:%.3f" % (k, v) for k, v in req.log_stat.iteritems())
             log_params_str = ",".join("%s:%s" % (k, v) for k, v in req.log_params.iteritems())
-            self._acclog.log("%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\tres:%s\tuser:%s" %
-                             (req.ip,
-                              req.reqid,
-                              req.funcname,
-                              cost_str,
-                              req.log_ret_code,
-                              stat_str,
-                              log_params_str,
-                              req.error_str,
-                              ",".join(req.log_res),
-                              req.username))
+            self._acclog.log("{ip}\t{reqid}\t{funcname}\t{cost}\t{ret_code}\t{username}\tstat:{stat}\tparams:{log_params}\terror_msg:{error}\tres:{res}".format
+                             (ip=req.ip,
+                              reqid=req.reqid,
+                              funcname=req.funcname,
+                              cost=cost_str,
+                              ret_code=req.log_ret_code,
+                              username=req.username,
+                              stat=stat_str,
+                              log_params=log_params_str,
+                              error=req.error_str,
+                              res=",".join(req.log_res)))
         except BaseException:
             try:
                 self._errlog.log(

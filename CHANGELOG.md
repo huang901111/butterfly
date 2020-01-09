@@ -4,6 +4,10 @@ Changelog
 
 本项目版本遵守 [Semantic Versioning] 和 [PEP-440]。
 
+## [1.0.8] - 2020-01-09
+### Changed
+- 修改访问日志格式，方便统计 
+
 ## [1.0.7] - 2019-12-02
 ### Changed
 - 添加 redirect 重定向
