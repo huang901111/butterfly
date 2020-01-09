@@ -20,11 +20,16 @@ def helloworld(req):
     """
     使用 butterfly 模板
     eg(output):
-        Hello, world
+        Hello, world! name: meetbill age : 21
     """
     isinstance(req, Request)
-    text_src = 'Hello, {{name}}!'
-    tpl_dict = {"name": "world"}
+    text_src = '''
+    Hello, {{name}}!
+
+    name: {{user.name}}
+    age : {{user.age}}
+    '''
+    tpl_dict = {"name": "world", "user": {"name": "meetbill", "age": 21}}
 
     t = template.Templite(text_src)
     text = t.render(tpl_dict)
