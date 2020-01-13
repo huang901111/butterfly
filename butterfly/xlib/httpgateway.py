@@ -430,7 +430,7 @@ def get_func_name(wsgienv):
         func_name:(String) func name
     """
     path = wsgienv.get("PATH_INFO", "")
-    if path.endswith("/"):
+    if path.endswith("/") and path != "/":
         func_name = path[:-1].encode("ascii")
     else:
         func_name = path.encode("ascii")

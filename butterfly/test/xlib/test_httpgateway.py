@@ -43,8 +43,10 @@ def test_get_func_name():
     wsgienv_2={"PATH_INFO":"/echo/"}
     wsgienv_3={"PATH_INFO":"/echo/ceshi"}
     wsgienv_4={"PATH_INFO":"/echo/ceshi/"}
+    wsgienv_5={"PATH_INFO":"/"}
     # True
     assert httpgateway.get_func_name(wsgienv_1) == "/echo"
     assert httpgateway.get_func_name(wsgienv_2) == "/echo"
     assert httpgateway.get_func_name(wsgienv_3) == "/echo/ceshi"
     assert httpgateway.get_func_name(wsgienv_4) == "/echo/ceshi"
+    assert httpgateway.get_func_name(wsgienv_5) == "/"
