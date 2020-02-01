@@ -74,11 +74,10 @@ class Route(object):
         self.apicube[name] = protocol_json.Protocol(func, retstat.ERR_SERVER_EXCEPTION, retstat.ERR_BAD_PARAMS,
                                                     is_parse_post, is_encode_response, self._errlog)
 
-    def add_apis(self, py_module, adder_args, package_name=""):
+    def add_apis(self, py_module, package_name=""):
         """将某个 module 文件中函数注册到路由中
         Args:
             py_module:Python module or package
-            adder_args:[is_parse_post,is_encode_response]
             package_name: If py_module is a package ,You have to pass this parameter.
         """
         for func_name, func in py_module.__dict__.iteritems():
@@ -96,14 +95,26 @@ class Route(object):
                 package_name=package_name, func_name=func_name)
             # handlers.api.ping ==> /api/ping
             path_name = "/" + "/".join(name.split(".")[1:])
+
+            # adder_args 为 [is_parse_post,is_encode_response] 默认值为 [True, False]
+            adder_args = [True, False]
+            attr_option_flag = False
+            if hasattr(func, 'apiattr'):
+                attr_option_flag = True
+                apiattr = getattr(func, 'apiattr')
+                is_parse_post = apiattr['is_parse_post']
+                is_encode_response = apiattr['is_encode_response']
+                adder_args = [is_parse_post, is_encode_response]
             self.addapi(path_name.lower(), func, *adder_args)
+
             args_count = func.func_code.co_argcount - 1 if inspect.ismethod(func) else func.func_code.co_argcount
             func_args = func.func_code.co_varnames[:args_count]
             self._infolog.log(
-                    "[Init handler] {path:20} [args]:{func_args:30} [is_parse_post]:{is_parse_post}" \
-                    " [is_encode_response]:{is_encode_response}".format(
+                "[Init handler] {path:20} [args]:{func_args:30} [attr_option]:{attr_option_flag} [is_parse_post]:{is_parse_post}"
+                " [is_encode_response]:{is_encode_response}".format(
                     path=path_name,
                     func_args=func_args,
+                    attr_option_flag=attr_option_flag,
                     is_parse_post=adder_args[0],
                     is_encode_response=adder_args[1]))
 
@@ -113,16 +124,12 @@ class Route(object):
             package_dir: package dir
         """
         # 将 "handlers" 目录下的 package 自动加载，也就是 __init__.py
+        self._infolog.log("-----------------------------------------start autoload_handler")
         results = import_submodules(package_dir)
         for package_name in results:
-            # 如果 package_name 是以 {package_dir}.x 开头，则说明为简易接口函数
-            if package_name.startswith("{package_dir}.x".format(package_dir=package_dir)):
-                adder_args = [True, True]
-            else:
-                adder_args = [True, False]
+            package = results[package_name]
             self.add_apis(
-                results[package_name],
-                adder_args,
+                package,
                 package_name=package_name)
 
     def get_route(self):

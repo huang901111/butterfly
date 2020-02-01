@@ -5,11 +5,13 @@ import struct
 from xlib import util
 from xlib.httpgateway import Request
 from xlib import retstat
+from xlib.middleware import funcattr
 
 __info__ = "meetbill"
 __version__ = "1.0.1"
 
 
+@funcattr.api
 def ping(req):
     """demo
     Args:
@@ -37,6 +39,7 @@ def ping(req):
     return retstat.OK, {"randstr": randstr}, [(__info__, __version__)]
 
 
+@funcattr.api
 def hello(req, str_info):
     isinstance(req, Request)
     return retstat.OK, {"str_info": str_info}, [(__info__, __version__)]

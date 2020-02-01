@@ -4,6 +4,12 @@ Changelog
 
 本项目版本遵守 [Semantic Versioning] 和 [PEP-440]。
 
+## [1.0.9] - 2020-02-01
+### Changed
+- 增加通过装饰器自定义 handler 属性
+### Removed
+- 删除 x 目录下自动设置 handler 属性逻辑
+
 ## [1.0.8] - 2020-01-09
 ### Changed
 - 修改访问日志格式，方便统计
