@@ -78,6 +78,19 @@ def timestamp2time_str_day(timestamp):
     return time.strftime("%Y-%m-%d", time.localtime(timestamp))
 
 
+def timestamp2time_str_with_format(timestamp, format_str):
+    """
+    timestamp 2 str
+
+    Args:
+        timestamp: timestamp
+        format_str: time format
+                    %Y-%m-%d %H:%M:%S
+                    %Y%m%d%H%M%S
+    """
+    return time.strftime(format_str, time.localtime(timestamp))
+
+
 def round_up_hour(hour):
     """
     round up hour to half or integer
