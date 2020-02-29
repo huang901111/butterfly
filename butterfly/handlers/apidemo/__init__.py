@@ -6,8 +6,8 @@ from xlib import util
 from xlib.httpgateway import Request
 from xlib import retstat
 
-__info__ = "meetbill"
-__version__ = "1.0.1"
+__info = "http_demo"
+__version = "1.0.1"
 
 
 def ping(req):
@@ -34,9 +34,9 @@ def ping(req):
     req.log_params["x"] = 1
     clen = struct.unpack("i", os.urandom(4))[0] % 64 + 64
     randstr = util.Base64_16.bin_to_b64(os.urandom(clen))
-    return retstat.HTTP_OK, {"stat":"OK","randstr": randstr}, [(__info__, __version__)]
+    return retstat.HTTP_OK, {"stat":"OK","randstr": randstr}, [(__info, __version)]
 
 
 def hello(req, str_info):
     isinstance(req, Request)
-    return retstat.HTTP_OK, {"stat":"OK","str_info": str_info}, [(__info__, __version__)]
+    return retstat.HTTP_OK, {"stat":"OK","str_info": str_info}, [(__info, __version)]

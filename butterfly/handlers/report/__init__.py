@@ -8,8 +8,8 @@
 # Description:
 
 """
-__info__ = "meetbill"
-__version__ = "1.0.1"
+__info = "report"
+__version = "1.0.1"
 
 import os
 import json

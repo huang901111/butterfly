@@ -10,8 +10,8 @@ from xlib import auth
 import Cookie
 
 
-__info__ = "meetbill"
-__version__ = "1.0.1"
+__info = "butterfly_auth"
+__version = "1.0.1"
 
 
 def ssologin(req, ticket=""):
@@ -38,7 +38,7 @@ def ssologin(req, ticket=""):
     for c in C.values():
         header_list.append(('Set-Cookie', c.OutputString()))
 
-    header_list.append((__info__, __version__))
+    header_list.append((__info, __version))
     header_list.append(("Location", homepage))
 
     context = {"success": True, "message": "{username} login success".format(username=username), "data": {

@@ -7,8 +7,8 @@ from xlib.httpgateway import Request
 from xlib import retstat
 from xlib.middleware import funcattr
 
-__info__ = "meetbill"
-__version__ = "1.0.1"
+__info = "demo"
+__version = "1.0.1"
 
 
 @funcattr.api
@@ -36,10 +36,10 @@ def ping(req):
     req.log_params["x"] = 1
     clen = struct.unpack("i", os.urandom(4))[0] % 64 + 64
     randstr = util.Base64_16.bin_to_b64(os.urandom(clen))
-    return retstat.OK, {"randstr": randstr}, [(__info__, __version__)]
+    return retstat.OK, {"randstr": randstr}, [(__info, __version)]
 
 
 @funcattr.api
 def hello(req, str_info):
     isinstance(req, Request)
-    return retstat.OK, {"str_info": str_info}, [(__info__, __version__)]
+    return retstat.OK, {"str_info": str_info}, [(__info, __version)]
