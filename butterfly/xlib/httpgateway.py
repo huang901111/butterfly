@@ -17,7 +17,7 @@ import inspect
 
 import xlib.uuid64
 
-__version__ = "1.0.9"
+__version__ = "1.0.10"
 
 
 def parse_cookie(cookie):
@@ -153,10 +153,13 @@ class WSGIGateway(object):
         reqid = self._uuid64.gen()
         req = Request(reqid, wsgienv, ip)
         try:
-            # 如果使用 nginx ，则需要在 nginx 上配置 "proxy_set_header X-Real-IP  $remote_addr;" 获取真实源 IP
+            # 当使用 nginx ，可在 nginx 上配置 "proxy_set_header X-Real-IP  $remote_addr;" 获取真实源 IP
             ip = wsgienv.get("HTTP_X_REAL_IP") or wsgienv.get("REMOTE_ADDR")
             assert ip
             req.ip = ip
+
+            # 当使用 nginx auth_request module 进行接口认证时，可以在 nginx 中配置将认证后的用户名透传
+            req.username = wsgienv.get("HTTP_X_USERNAME") or ""
 
             # 如果匹配到静态文件前缀，就会返回静态文件
             file_path = self._try_to_handler_static(wsgienv)

@@ -4,6 +4,16 @@ Changelog
 
 本项目版本遵守 [Semantic Versioning] 和 [PEP-440]。
 
+## [1.0.10] - 2020-03-07
+### Changed
+- 增加默认获取请求 header 中的 `X-Username` 用作日志中中记录的用户名
+```
+变更原因:
+当身份验证组件和接口服务组件分离时，接口服务组件需要获取到用户名
+
+比如当用户认证使用 nginx auth_request module 进行身份验证时，验证身份通过后，可以将验证后的用户名使用 header 传到后端接口
+```
+
 ## [1.0.9] - 2020-02-01
 ### Changed
 - 增加通过装饰器自定义 handler 属性
