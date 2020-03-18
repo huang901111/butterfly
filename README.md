@@ -17,6 +17,8 @@
 * [1 环境](#1-环境)
 * [2 特性](#2-特性)
 * [3 使用手册](#3-使用手册)
+    * [3.1 手册传送门](#31-手册传送门)
+    * [3.2 举个栗子](#32-举个栗子)
 * [4 版本信息](#4-版本信息)
 * [5 参加步骤](#5-参加步骤)
 
@@ -48,10 +50,62 @@ curl -v "http://127.0.0.1:8585/x/hello?str_info=meetbill"   ===> handlers/x::hel
 
 ## 3 使用手册
 
+### 3.1 手册传送门
+
 * [Butterfly 手册](https://github.com/meetbill/butterfly/wiki)
 * [Butterfly 示例](https://github.com/meetbill/butterfly-examples)
 * [Butterfly 前端](https://github.com/meetbill/butterfly-fe)
 * [Butterfly nginx 配置](https://github.com/meetbill/butterfly-nginx)
+
+### 3.2 举个栗子
+
+> 前后端分离 + 单点登录结合
+>  * 后端接口认证使用 nginx auth_request 进行验证
+>  * [接口认证](https://github.com/meetbill/butterfly/wiki/butterfly_cas)模块化，复用性强
+
+```
+                   +----------------------------------------------------------------------+
+                   |                      butterfly-nginx                                 |
+                   +----------------------------------------------------------------------+
+                       |                     |                                       |
+                       V                     V                                       V
+               +-------------+    +---------------------+                    +---------------+
+               |~* /static/  |    |= /auth/verification |                    |/              |
+               |= /index.html|    |= /butterfly_401     |                    |               |
+               |= /          |    |= /auth/ssologin     |                    |               |
+               +-------------+    +---------------------+                    +---------------+
+                       |                     |                                       |
+                       V                     V                                       V
++----------+       +------------+     +--------------+       +----------+      +-----------+
+|web browse|       |butterfly-fe|     |butterfly-auth|       |cas-server|      |app-backend|
++----------+       +------------+     +--------------+       +----------+      +-----------+
+     |                    |                  |                     |                 |
+     +-------route------->|                  |                     |                 |
+     |<-------page--------+                  |                     |                 |
+     |                    |                  |                     |                 |
+     +--V----------------request api------------------------------------------------>|
+     |  +-sub request-header not have token->|/auth/verification   |                 |
+     |<-code=401,targetURL=../auth/ssologin--+                     |                 |
+     |                    |                  |                     |                 |
+     +--window.location.herf=directurl------>|/auth/ssologin       |                 |
+     |<----code=302,Location=cas-server------+                     |                 |
+     |                    |                  |                     |                 |
+     +-----302 http://cas-server/login  login page --------------->|                 |
+     |<-------------code=302,set Cookie TGT=xxx -------------------+                 |
+     |                    |                  |                     |                 |
+     +-----302 /auth/ssologin?ticket=xxx --->|                     |                 |
+     |                    |                  +-------check st----->|                 |
+     |                    |                  |<-------st vaild-----+                 |
+     |<--code=302 set Cookie butterfly_token-+                     |                 |
+     |                    |                  |                     |                 |
+     ================================================================================= have token
+     +--302 index.html--->|                  |                     |                 |
+     |<-------page--------+                  |                     |                 |
+     |                    |                  |                     |                 |
+     +---V----------------request api----------------------------------------------->|
+     |   +-sub request-header have token---->|/auth/verification   |                 |
+     |<------------------response----------------------------------------------------+
+```
 
 ## 4 版本信息
 
