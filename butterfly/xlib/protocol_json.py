@@ -15,6 +15,7 @@ import logging
 import collections
 
 from xlib import httpgateway
+from xlib.util import json_util
 
 
 class Protocol(object):
@@ -69,7 +70,7 @@ class Protocol(object):
         """
         if stat is not None:
             data["stat"] = stat
-        ret = json.dumps(data)
+        ret = json.dumps(data, cls=json_util.JsonToDatetime)
         if isinstance(ret, unicode):
             ret = ret.encode("utf8")
         return ret

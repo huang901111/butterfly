@@ -4,6 +4,14 @@ Changelog
 
 本项目版本遵守 [Semantic Versioning] 和 [PEP-440]。
 
+## [1.0.11] - 2020-03-23
+### Changed
+- content 在 josn 序列化时,添加对 Datetime 类型的支持
+```
+变更原因:
+使用 peewee DateTimeField 时，为 Datetime 类型
+```
+
 ## [1.0.10] - 2020-03-07
 ### Changed
 - 增加默认获取请求 header 中的 `X-Username` 用作日志中中记录的用户名

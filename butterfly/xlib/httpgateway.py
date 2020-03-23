@@ -17,7 +17,7 @@ import inspect
 
 import xlib.uuid64
 
-__version__ = "1.0.10"
+__version__ = "1.0.11"
 
 
 def parse_cookie(cookie):
