@@ -1,9 +1,7 @@
 # coding:utf8
 
-import sys
-import traceback
 from threading import local
-import _mysql
+from xlib.db import pymysql
 
 
 class MysqlConnManager(local):
@@ -28,19 +26,17 @@ class MysqlConnManager(local):
                 raise "Create MYSQL Connection Failed"
         return self._conn
 
-    # def __del__(self):
-        # if self._is_conn_vaild():
-        # self._conn.close()
-
     def _create_conn(self):
         if self._is_conn_vaild():
             return
-        self._conn = _mysql.connect(host=self._host,
-                                    port=self._port,
-                                    db=self._db,
-                                    user=self._usr,
-                                    passwd=self._pwd)
-        self._conn.set_character_set('utf8')
+        self._conn = pymysql.connect(autocommit=False,
+                                     host=self._host,
+                                     user=self._usr,
+                                     passwd=self._pwd,
+                                     db=self._db,
+                                     port=self._port,
+                                     cursorclass=pymysql.cursors.DictCursor,
+                                     charset="utf8")
 
     def _is_conn_vaild(self):
         if self._conn:
@@ -53,7 +49,7 @@ class MysqlConnManager(local):
         return False
 
 
-class MysqlExecutor:
+class MysqlExecutor(object):
 
     def __init__(self, conn_mgr):
         self._conn_mgr = conn_mgr
@@ -117,7 +113,7 @@ def escape(sql):
         return ""
     if isinstance(sql, unicode):
         sql = sql.encode('utf8')
-    return _mysql.escape_string(sql)
+    return pymysql.escape_string(sql)
 
 
 def get_mysql_cond(cond_dict):
