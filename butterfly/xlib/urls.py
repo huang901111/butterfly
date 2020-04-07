@@ -19,8 +19,8 @@ from xlib import protocol_json
 
 def import_submodules(package):
     """
-    Import all submodules of a module, recursively,
-    including subpackages.
+    Import all submodules of a module
+    只加载指定 package 及此 package 的子 package
 
     From http://stackoverflow.com/questions/3365740/how-to-import-all-submodules
 
@@ -42,6 +42,8 @@ def import_submodules(package):
     if isinstance(package, str):
         results[package] = importlib.import_module(package)
         package = importlib.import_module(package)
+
+    # package.__path__ 是个文件夹路径列表，在本框架此处即为 ["handlers"]
     for _loader, name, is_pkg in pkgutil.walk_packages(package.__path__):
         if is_pkg:
             full_name = package.__name__ + '.' + name

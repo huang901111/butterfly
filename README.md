@@ -42,18 +42,22 @@ env:Python 2.7
 ## 1.2 特性
 
 ```
-# 不带参数
-http://IP:PORT/{handlers 下的 package,此处支持多级}/{func_name}
+# GET 不带参数
+GET http://IP:PORT/{handler}/{func_name}
 
-# 带参数
-http://IP:PORT/{handlers 下的 package,此处支持多级}/{func_name}?args1=value1
+# GET 带参数
+GET http://IP:PORT/{handler}/{func_name}?args1=value1
+
+# POST 参数时, 数据类型需要是 application/json
 
 如:
-curl -v "http://127.0.0.1:8585/x/ping"                      ===> handlers/x::ping()
-curl -v "http://127.0.0.1:8585/x/hello?str_info=meetbill"   ===> handlers/x::hello(str_info=meetbill)
+curl -v "http://127.0.0.1:8585/x/ping"                                  ===> handlers/x/__init__.py:ping()
+curl -v "http://127.0.0.1:8585/x/hello?str_info=meetbill"               ===> handlers/x/__init__.py:hello(str_info=meetbill)
+curl -v  -d '{"str_info":"meetbill"}' http://127.0.0.1:8585/x/hello     ===> handlers/x/__init__.py:hello(str_info=meetbill)
 ```
 
 > * 根据 handlers package 下 package 目录结构自动加载路由(目前不支持动态路由)
+>   * 只加载 handlers package 及其子 package 作为 handler
 > * 自定义 HTTP header
 > * Handler 的参数列表与 HTTP 请求参数保持一致，便于接口开发
 > * 自动对 HTTP 请求参数进行参数检查
@@ -181,8 +185,8 @@ controller 函数是第一个参数为 "req" 的非私有函数
 
 ### 3.2 举个栗子
 
-> 前后端分离 + 单点登录结合
->  * 后端接口认证使用 nginx auth_request 进行验证
+> 前后端分离 + 单点登录应用
+>  * 整体方案的后端接口认证使用 nginx auth_request 进行验证
 >  * [接口认证方案](https://github.com/meetbill/butterfly/wiki/butterfly_cas)模块化，复用性强
 
 ```
